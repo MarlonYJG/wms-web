@@ -7,8 +7,10 @@
 
 // 分页
 .el-pagination {
+
   // 参考 Bootstrap 的响应式设计 WIDTH = 768
   @media screen and (max-width: 768px) {
+
     .el-pagination__total,
     .el-pagination__sizes,
     .el-pagination__jump,
@@ -17,4 +19,47 @@
       display: none;
     }
   }
+}
+
+// Dialog - 全局统一弹框标题区与标题样式
+.el-dialog {
+  font-size: 16px;
+}
+
+.el-dialog__header {
+  padding: 6px 12px;
+}
+
+.el-dialog__title {
+  font-size     : 16px;
+  font-weight   : 600;
+  color         : var(--el-text-color-primary);
+  letter-spacing: 0.2px;
+  line-height   : 20px;
+}
+
+// 提升优先级，确保所有场景下标题字号为 16px
+.el-overlay .el-dialog .el-dialog__header .el-dialog__title,
+.el-overlay-dialog .el-dialog__header .el-dialog__title {
+  font-size: 16px !important;
+}
+
+// Dialog 内容与底部间距优化（全局统一）
+.el-dialog__body {
+  padding: 12px 16px;
+}
+
+.el-dialog__footer {
+  padding   : 10px 16px;
+  border-top: 1px solid var(--el-border-color-lighter);
+}
+
+// 缩小关闭按钮占位，进一步降低视觉高度
+.el-dialog__headerbtn {
+  top  : 6px;
+  right: 10px;
+}
+
+.el-dialog__headerbtn .el-dialog__close {
+  font-size: 16px;
 }

@@ -38,9 +38,10 @@ body {
   background-color: var(--wms-body-bg-color);
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  font-family:
-    Inter, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial,
-    sans-serif;
+  font-family: var(--wms-font-family-base);
+  font-size: var(--wms-font-size-base);
+  line-height: var(--wms-line-height-base);
+  letter-spacing: var(--wms-letter-spacing-base);
   @extend %scrollbar;
 }
 
@@ -52,6 +53,17 @@ body {
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+/* Headings: 专业感更强的视觉层级 */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--wms-heading-weight);
+  line-height: var(--wms-heading-line-height);
+  letter-spacing: var(--wms-heading-letter-spacing);
+}
+
+code, pre, kbd, samp {
+  font-family: var(--wms-font-family-mono);
 }
 
 a,

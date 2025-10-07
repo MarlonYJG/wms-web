@@ -4,6 +4,10 @@ export interface Warehouse {
   name: string
   code: string
   address?: string
+  contactPerson?: string
+  contactPhone?: string
+  totalCapacity?: number
+  usedCapacity?: number
   isEnabled: boolean
   createdTime: string
 }
@@ -12,6 +16,7 @@ export interface Warehouse {
 export interface WarehouseQuery {
   page?: number
   size?: number
+  keyword?: string
   name?: string
   code?: string
   isEnabled?: boolean
@@ -22,6 +27,9 @@ export interface WarehouseForm {
   name: string
   code: string
   address?: string
+  contactPerson?: string
+  contactPhone?: string
+  totalCapacity?: number
   isEnabled?: boolean
 }
 
@@ -33,4 +41,9 @@ export interface WarehouseStats {
   totalValue: number
   inboundOrders: number
   outboundOrders: number
+}
+
+export interface PageResult<T> {
+  data: T[]
+  total: number
 }

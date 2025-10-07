@@ -1,9 +1,9 @@
-import type { Warehouse, WarehouseForm, WarehouseQuery } from "./type"
+import type { PageResult, Warehouse, WarehouseForm, WarehouseQuery } from "./type"
 import { http } from "@/http/axios"
 
-/** 获取仓库列表 */
+/** 获取仓库列表（分页） */
 export function getWarehouseList(params: WarehouseQuery) {
-  return http.get<Warehouse[]>("/warehouse", { params })
+  return http.get<PageResult<Warehouse>>("/warehouse", { params })
 }
 
 /** 获取仓库详情 */
@@ -29,4 +29,9 @@ export function deleteWarehouse(id: number) {
 /** 获取仓库统计信息 */
 export function getWarehouseStats(id: number) {
   return http.get(`/warehouse/${id}/stats`)
+}
+
+/** 切换仓库启用状态 */
+export function updateWarehouseStatus(id: number, isEnabled: boolean) {
+  return http.patch(`/warehouse/${id}/status`, { isEnabled })
 }

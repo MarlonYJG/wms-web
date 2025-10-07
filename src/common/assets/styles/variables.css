@@ -4,6 +4,15 @@
   /* Body */
   --wms-body-text-color: var(--el-text-color-primary);
   --wms-body-bg-color: var(--el-bg-color-page);
+  /* Typography */
+  --wms-font-family-base: Inter, "Segoe UI", "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  --wms-font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --wms-font-size-base: 14px;
+  --wms-line-height-base: 1.6;
+  --wms-letter-spacing-base: 0.2px;
+  --wms-heading-weight: 600;
+  --wms-heading-line-height: 1.4;
+  --wms-heading-letter-spacing: 0.2px;
   /* Header 区域 = NavigationBar 组件 + TagsView 组件 */
   --wms-header-height: calc(
     var(--wms-navigationbar-height) + var(--wms-tagsview-height) + var(--wms-header-border-bottom-width)

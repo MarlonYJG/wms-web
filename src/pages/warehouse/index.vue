@@ -2,7 +2,7 @@
 import type { Warehouse, WarehouseForm, WarehouseQuery } from "@/common/apis/warehouse/type"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { onMounted, reactive, ref } from "vue"
-import { createWarehouse, deleteWarehouse, getWarehouseList, updateWarehouse } from "@/common/apis/warehouse"
+import { createWarehouse, deleteWarehouse, getWarehouseList, updateWarehouse, updateWarehouseStatus } from "@/common/apis/warehouse"
 import WarehouseFormDialog from "./components/WarehouseFormDialog.vue"
 
 // 响应式数据
@@ -31,7 +31,7 @@ async function fetchWarehouseList() {
     const response = await getWarehouseList(queryParams)
     tableData.value = response.data
     total.value = response.total || 0
-  } catch (error) {
+  } catch {
     ElMessage.error("获取仓库列表失败")
   } finally {
     loading.value = false
@@ -70,6 +70,17 @@ function handleEdit(row: Warehouse) {
   formDialog.value?.open()
 }
 
+// 启用/禁用切换
+async function handleToggleEnabled(row: Warehouse) {
+  try {
+    await updateWarehouseStatus(row.id, !row.isEnabled)
+    ElMessage.success(!row.isEnabled ? "已启用" : "已禁用")
+    fetchWarehouseList()
+  } catch {
+    ElMessage.error("状态更新失败")
+  }
+}
+
 // 删除仓库
 async function handleDelete(row: Warehouse) {
   try {
@@ -106,7 +117,7 @@ async function handleSave(formData: WarehouseForm) {
 
     formDialog.value?.close()
     fetchWarehouseList()
-  } catch (error) {
+  } catch {
     ElMessage.error(formType.value === "create" ? "创建失败" : "更新失败")
   }
 }
@@ -131,23 +142,13 @@ onMounted(() => {
 <template>
   <div class="warehouse-container">
     <!-- 搜索表单 -->
-    <el-card class="search-card" shadow="never">
-      <el-form :model="queryParams" inline>
+    <el-card class="search-card" shadow="never" :body-style="{ padding: '16px 20px' }">
+      <el-form :model="queryParams" inline class="search-form" label-width="100px">
         <el-form-item label="仓库名称">
-          <el-input
-            v-model="queryParams.name"
-            placeholder="请输入仓库名称"
-            clearable
-            @keyup.enter="handleSearch"
-          />
+          <el-input v-model="queryParams.name" placeholder="请输入仓库名称" clearable @keyup.enter="handleSearch" />
         </el-form-item>
         <el-form-item label="仓库编码">
-          <el-input
-            v-model="queryParams.code"
-            placeholder="请输入仓库编码"
-            clearable
-            @keyup.enter="handleSearch"
-          />
+          <el-input v-model="queryParams.code" placeholder="请输入仓库编码" clearable @keyup.enter="handleSearch" />
         </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="queryParams.isEnabled" placeholder="请选择状态" clearable>
@@ -155,7 +156,7 @@ onMounted(() => {
             <el-option label="禁用" :value="false" />
           </el-select>
         </el-form-item>
-        <el-form-item>
+        <el-form-item class="search-actions">
           <el-button type="primary" @click="handleSearch">
             搜索
           </el-button>
@@ -170,18 +171,23 @@ onMounted(() => {
     <el-card class="table-card" shadow="never">
       <template #header>
         <div class="card-header">
-          <span>仓库列表</span>
-          <el-button type="primary" @click="handleAdd">
-            新增仓库
-          </el-button>
+          <span class="card-title">仓库列表</span>
+          <div class="toolbar">
+            <el-button type="primary" @click="handleAdd">
+              新增仓库
+            </el-button>
+          </div>
         </div>
       </template>
 
       <!-- 数据表格 -->
-      <el-table :data="tableData" v-loading="loading" stripe>
+      <el-table
+        :data="tableData" v-loading="loading" stripe border
+        :header-cell-style="{ background: 'var(--el-fill-color-light)' }" row-key="id"
+      >
         <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="name" label="仓库名称" />
-        <el-table-column prop="code" label="仓库编码" />
+        <el-table-column prop="name" label="仓库名称" show-overflow-tooltip />
+        <el-table-column prop="code" label="仓库编码" show-overflow-tooltip />
         <el-table-column prop="address" label="地址" show-overflow-tooltip />
         <el-table-column prop="isEnabled" label="状态" width="100">
           <template #default="{ row }">
@@ -195,8 +201,13 @@ onMounted(() => {
             {{ new Date(row.createdTime).toLocaleString() }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column label="操作" width="260" fixed="right">
           <template #default="{ row }">
+            <el-switch
+              v-model="row.isEnabled"
+              :active-text="row.isEnabled ? '启用' : '禁用'"
+              @change="() => handleToggleEnabled(row)"
+            />
             <el-button type="primary" size="small" @click="handleEdit(row)">
               编辑
             </el-button>
@@ -205,38 +216,63 @@ onMounted(() => {
             </el-button>
           </template>
         </el-table-column>
+
+        <template #empty>
+          <div class="table-empty">
+            <el-empty description="暂无数据" />
+          </div>
+        </template>
       </el-table>
 
       <!-- 分页 -->
       <div class="pagination-container">
         <el-pagination
-          v-model:current-page="queryParams.page"
-          v-model:page-size="queryParams.size"
-          :page-sizes="[10, 20, 50, 100]"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
-          @current-change="handlePageChange"
+          v-model:current-page="queryParams.page" v-model:page-size="queryParams.size"
+          :page-sizes="[10, 20, 50, 100]" :total="total" background layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handleSizeChange" @current-change="handlePageChange"
         />
       </div>
     </el-card>
 
     <!-- 表单对话框 -->
-    <WarehouseFormDialog
-      ref="formDialog"
-      :type="formType"
-      :record="currentRecord"
-      @save="handleSave"
-    />
+    <WarehouseFormDialog ref="formDialog" :type="formType" :record="currentRecord" @save="handleSave" />
   </div>
 </template>
 
 <style lang="scss" scoped>
 .warehouse-container {
+  font-size: 16px;
   padding: 20px;
 
   .search-card {
     margin-bottom: 20px;
+
+    .search-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      grid-column-gap: 16px;
+      grid-row-gap: 0;
+      align-items: start;
+
+      .search-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        justify-self: end;
+      }
+
+      @media (max-width: 1200px) {
+        grid-template-columns: 1fr 1fr auto;
+      }
+
+      @media (max-width: 1100px) {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
   }
 
   .table-card {
@@ -244,12 +280,26 @@ onMounted(() => {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 8px 0;
+
+      .card-title {
+        font-weight: 600;
+      }
+
+      .toolbar {
+        display: flex;
+        gap: 12px;
+      }
     }
 
     .pagination-container {
       margin-top: 20px;
       display: flex;
       justify-content: center;
+    }
+
+    .table-empty {
+      padding: 24px 0;
     }
   }
 }

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
+import type { FormRules } from "element-plus"
 import type { Warehouse, WarehouseForm } from "@/common/apis/warehouse/type"
-import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElSwitch } from "element-plus"
+import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElInputNumber, ElSwitch } from "element-plus"
 import { nextTick, reactive, ref, watch } from "vue"
 
 interface Props {
@@ -24,11 +25,14 @@ const formData = reactive<WarehouseForm>({
   name: "",
   code: "",
   address: "",
+  contactPerson: "",
+  contactPhone: "",
+  totalCapacity: undefined,
   isEnabled: true
 })
 
 // 表单验证规则
-const rules = {
+const rules: FormRules = {
   name: [
     { required: true, message: "请输入仓库名称", trigger: "blur" },
     { min: 2, max: 100, message: "仓库名称长度在 2 到 100 个字符", trigger: "blur" }
@@ -36,6 +40,12 @@ const rules = {
   code: [
     { required: true, message: "请输入仓库编码", trigger: "blur" },
     { min: 2, max: 50, message: "仓库编码长度在 2 到 50 个字符", trigger: "blur" }
+  ],
+  contactPerson: [
+    { min: 1, max: 50, message: "负责人长度在 1 到 50 个字符", trigger: "blur" }
+  ],
+  contactPhone: [
+    { min: 6, max: 20, message: "联系方式长度在 6 到 20 个字符", trigger: "blur" }
   ]
 }
 
@@ -46,6 +56,9 @@ watch(() => props.record, (newRecord) => {
       name: newRecord.name,
       code: newRecord.code,
       address: newRecord.address || "",
+      contactPerson: newRecord.contactPerson || "",
+      contactPhone: newRecord.contactPhone || "",
+      totalCapacity: newRecord.totalCapacity,
       isEnabled: newRecord.isEnabled
     })
   } else {
@@ -59,6 +72,9 @@ function resetForm() {
     name: "",
     code: "",
     address: "",
+    contactPerson: "",
+    contactPhone: "",
+    totalCapacity: undefined,
     isEnabled: true
   })
   nextTick(() => {
@@ -103,54 +119,46 @@ defineExpose({
 
 <template>
   <ElDialog
-    v-model="visible"
-    :title="type === 'create' ? '新增仓库' : '编辑仓库'"
-    width="600px"
-    @close="handleCancel"
+    v-model="visible" :title="type === 'create' ? '新增仓库' : '编辑仓库'" width="640px" :padding="0" top="10vh"
+    destroy-on-close :close-on-click-modal="false" @close="handleCancel"
   >
-    <ElForm
-      ref="formRef"
-      :model="formData"
-      :rules="rules"
-      label-width="100px"
-    >
-      <ElFormItem label="仓库名称" prop="name">
-        <ElInput
-          v-model="formData.name"
-          placeholder="请输入仓库名称"
-          maxlength="100"
-          show-word-limit
-        />
-      </ElFormItem>
+    <div class="dialog-body">
+      <ElForm
+        ref="formRef" :model="formData" :rules="rules" label-width="80px" class="dialog-form"
+        label-position="right"
+      >
+        <ElFormItem label="仓库名称" prop="name">
+          <ElInput v-model="formData.name" placeholder="请输入仓库名称" maxlength="100" show-word-limit />
+        </ElFormItem>
 
-      <ElFormItem label="仓库编码" prop="code">
-        <ElInput
-          v-model="formData.code"
-          placeholder="请输入仓库编码"
-          maxlength="50"
-          show-word-limit
-        />
-      </ElFormItem>
+        <ElFormItem label="仓库编码" prop="code">
+          <ElInput v-model="formData.code" placeholder="请输入仓库编码" maxlength="50" show-word-limit />
+        </ElFormItem>
 
-      <ElFormItem label="地址">
-        <ElInput
-          v-model="formData.address"
-          type="textarea"
-          placeholder="请输入仓库地址"
-          :rows="3"
-          maxlength="255"
-          show-word-limit
-        />
-      </ElFormItem>
+        <ElFormItem label="负责人" prop="contactPerson">
+          <ElInput v-model="formData.contactPerson" placeholder="请输入负责人" maxlength="50" show-word-limit />
+        </ElFormItem>
 
-      <ElFormItem label="状态">
-        <ElSwitch
-          v-model="formData.isEnabled"
-          active-text="启用"
-          inactive-text="禁用"
-        />
-      </ElFormItem>
-    </ElForm>
+        <ElFormItem label="联系电话" prop="contactPhone">
+          <ElInput v-model="formData.contactPhone" placeholder="请输入联系电话" maxlength="20" show-word-limit />
+        </ElFormItem>
+
+        <ElFormItem label="状态">
+          <ElSwitch v-model="formData.isEnabled" active-text="启用" inactive-text="禁用" />
+        </ElFormItem>
+
+        <ElFormItem label="地址" class="span-2">
+          <ElInput
+            v-model="formData.address" type="textarea" placeholder="请输入仓库地址" :rows="3" maxlength="255"
+            show-word-limit
+          />
+        </ElFormItem>
+
+        <ElFormItem label="总容量" prop="totalCapacity">
+          <ElInputNumber v-model="formData.totalCapacity" :min="0" :step="1" :precision="0" controls-position="right" placeholder="请输入总容量" />
+        </ElFormItem>
+      </ElForm>
+    </div>
 
     <template #footer>
       <div class="dialog-footer">
@@ -166,9 +174,5 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-.dialog-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
+
 </style>
