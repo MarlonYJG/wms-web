@@ -1,5 +1,6 @@
 import type { RouteRecordRaw } from "vue-router"
 import { createRouter } from "vue-router"
+import { PERMISSIONS } from "@@/constants/permissions"
 import { routerConfig } from "@/router/config"
 import { registerNavigationGuard } from "@/router/guard"
 import { flatMultiLevelRoutes } from "./helper"
@@ -58,47 +59,125 @@ export const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: "数据看板",
           svgIcon: "dashboard",
-          affix: true
+          affix: true,
+          roles: [PERMISSIONS.DASHBOARD_VIEW]
         }
       }
     ]
   },
   {
-    path: "/warehouse",
+    path: "/basic",
     component: Layouts,
-    redirect: "/warehouse/index",
-    name: "Warehouse",
+    redirect: "/basic/warehouses",
+    name: "Basic",
     meta: {
-      title: "仓库管理",
-      elIcon: "OfficeBuilding"
+      title: "基础数据",
+      elIcon: "Collection",
+      roles: [PERMISSIONS.BASIC_WAREHOUSE_LIST]
     },
     children: [
       {
-        path: "index",
+        path: "warehouses",
         component: () => import("@/pages/warehouse/index.vue"),
-        name: "WarehouseIndex",
+        name: "BasicWarehouses",
         meta: {
-          title: "仓库管理"
+          title: "仓库管理",
+          roles: [PERMISSIONS.BASIC_WAREHOUSE_LIST]
+        }
+      },
+      {
+        path: "zones",
+        component: () => import("@/pages/warehouse/zones.vue"),
+        name: "BasicZones",
+        meta: {
+          title: "库区管理",
+          roles: [PERMISSIONS.BASIC_ZONE_LIST]
+        }
+      },
+      {
+        path: "locations",
+        component: () => import("@/pages/warehouse/locations.vue"),
+        name: "BasicLocations",
+        meta: {
+          title: "库位管理",
+          roles: [PERMISSIONS.BASIC_LOCATION_LIST]
+        }
+      },
+      {
+        path: "skus",
+        component: () => import("@/pages/product/index.vue"),
+        name: "BasicSkus",
+        meta: {
+          title: "商品管理",
+          roles: [PERMISSIONS.BASIC_SKU_LIST]
+        }
+      },
+      {
+        path: "suppliers",
+        component: () => import("@/pages/product/suppliers.vue"),
+        name: "BasicSuppliers",
+        meta: {
+          title: "供应商管理",
+          roles: [PERMISSIONS.BASIC_SUPPLIER_LIST]
+        }
+      },
+      {
+        path: "customers",
+        component: () => import("@/pages/product/customers.vue"),
+        name: "BasicCustomers",
+        meta: {
+          title: "客户管理",
+          roles: [PERMISSIONS.BASIC_CUSTOMER_LIST]
         }
       }
     ]
   },
+  
   {
-    path: "/product",
+    path: "/inbound",
     component: Layouts,
-    redirect: "/product/index",
-    name: "Product",
+    redirect: "/inbound/appointments",
+    name: "Inbound",
     meta: {
-      title: "商品管理",
-      elIcon: "Box"
+      title: "入库管理",
+      elIcon: "Upload",
+      roles: [PERMISSIONS.INBOUND_ORDER_LIST]
     },
     children: [
       {
-        path: "index",
-        component: () => import("@/pages/product/index.vue"),
-        name: "ProductIndex",
+        path: "appointments",
+        component: () => import("@/pages/inbound/appointments.vue"),
+        name: "InboundAppointments",
         meta: {
-          title: "商品管理"
+          title: "预约入库",
+          roles: [PERMISSIONS.INBOUND_APPOINTMENT_LIST]
+        }
+      },
+      {
+        path: "orders",
+        component: () => import("@/pages/inbound/orders.vue"),
+        name: "InboundOrders",
+        meta: {
+          title: "收货管理",
+          roles: [PERMISSIONS.INBOUND_ORDER_LIST]
+        }
+      },
+      {
+        path: "qc",
+        component: () => import("@/pages/inbound/qc.vue"),
+        name: "InboundQC",
+        meta: {
+          title: "质检管理",
+          roles: [PERMISSIONS.INBOUND_QC_LIST]
+        }
+      },
+      {
+        path: "putaway",
+        component: () => import("@/pages/inbound/putaway.vue"),
+        name: "InboundPutaway",
+        meta: {
+          title: "上架管理",
+          roles: [PERMISSIONS.INBOUND_PUTAWAY_LIST]
         }
       }
     ]
@@ -106,43 +185,53 @@ export const constantRoutes: RouteRecordRaw[] = [
   {
     path: "/inventory",
     component: Layouts,
-    redirect: "/inventory/index",
+    redirect: "/inventory/query",
     name: "Inventory",
     meta: {
       title: "库存管理",
-      elIcon: "Grid"
+      elIcon: "Grid",
+      roles: [PERMISSIONS.INVENTORY_QUERY_LIST]
     },
     children: [
       {
-        path: "index",
+        path: "query",
         component: () => import("@/pages/inventory/index.vue"),
-        name: "InventoryIndex",
+        name: "InventoryQuery",
         meta: {
-          title: "库存管理"
+          title: "库存查询",
+          roles: [PERMISSIONS.INVENTORY_QUERY_LIST]
         }
-      }
-    ]
-  },
-  {
-    path: "/inbound",
-    component: Layouts,
-    redirect: "/inbound/index",
-    name: "Inbound",
-    meta: {
-      title: "入库管理",
-      elIcon: "Upload"
-    },
-    children: [
+      },
       {
-        path: "index",
-        component: () => import("@/pages/inbound/index.vue"),
-        name: "InboundIndex",
+        path: "adjustments",
+        component: () => import("@/pages/inventory/adjustments.vue"),
+        name: "InventoryAdjustments",
         meta: {
-          title: "入库管理"
+          title: "库存调整",
+          roles: [PERMISSIONS.INVENTORY_ADJUST_LIST]
+        }
+      },
+      {
+        path: "transfers",
+        component: () => import("@/pages/inventory/transfers.vue"),
+        name: "InventoryTransfers",
+        meta: {
+          title: "库存转移",
+          roles: [PERMISSIONS.INVENTORY_TRANSFER_LIST]
+        }
+      },
+      {
+        path: "counts",
+        component: () => import("@/pages/inventory/counts.vue"),
+        name: "InventoryCounts",
+        meta: {
+          title: "盘点管理",
+          roles: [PERMISSIONS.INVENTORY_COUNT_LIST]
         }
       }
     ]
   },
+  
   {
     path: "/outbound",
     component: Layouts,
@@ -150,7 +239,8 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: "Outbound",
     meta: {
       title: "出库管理",
-      elIcon: "Download"
+      elIcon: "Download",
+      roles: [PERMISSIONS.OUTBOUND_ORDER_LIST]
     },
     children: [
       {
@@ -158,7 +248,188 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/pages/outbound/index.vue"),
         name: "OutboundIndex",
         meta: {
-          title: "出库管理"
+          title: "出库管理",
+          roles: [PERMISSIONS.OUTBOUND_ORDER_LIST]
+        }
+      },
+      {
+        path: "orders",
+        component: () => import("@/pages/outbound/orders.vue"),
+        name: "OutboundOrders",
+        meta: {
+          title: "订单管理",
+          roles: [PERMISSIONS.OUTBOUND_ORDER_LIST]
+        }
+      },
+      {
+        path: "waves",
+        component: () => import("@/pages/outbound/waves.vue"),
+        name: "PickingWaves",
+        meta: {
+          title: "波次管理",
+          roles: [PERMISSIONS.OUTBOUND_WAVE_LIST]
+        }
+      },
+      {
+        path: "picking",
+        component: () => import("@/pages/outbound/picking.vue"),
+        name: "PickingTasks",
+        meta: {
+          title: "拣货管理",
+          roles: [PERMISSIONS.OUTBOUND_PICKING_LIST]
+        }
+      },
+      {
+        path: "review",
+        component: () => import("@/pages/outbound/review.vue"),
+        name: "ReviewTasks",
+        meta: {
+          title: "复核管理",
+          roles: [PERMISSIONS.OUTBOUND_REVIEW_LIST]
+        }
+      },
+      {
+        path: "pack",
+        component: () => import("@/pages/outbound/pack.vue"),
+        name: "PackingTasks",
+        meta: {
+          title: "打包管理",
+          roles: [PERMISSIONS.OUTBOUND_PACK_GENERATE]
+        }
+      },
+      {
+        path: "shipping",
+        component: () => import("@/pages/outbound/shipping.vue"),
+        name: "ShippingTasks",
+        meta: {
+          title: "发货管理",
+          roles: [PERMISSIONS.OUTBOUND_SHIPPING_LIST]
+        }
+      }
+    ]
+  }
+  ,
+  {
+    path: "/reports",
+    component: Layouts,
+    redirect: "/reports/dashboard",
+    name: "Reports",
+    meta: {
+      title: "报表与分析",
+      elIcon: "DataAnalysis",
+      roles: [PERMISSIONS.DASHBOARD_DATA_DATA]
+    },
+    children: [
+      {
+        path: "dashboard",
+        component: () => import("@/pages/reports/dashboard.vue"),
+        name: "ReportsDashboard",
+        meta: {
+          title: "看板",
+          roles: [PERMISSIONS.DASHBOARD_DATA_DATA]
+        }
+      },
+      {
+        path: "inventory",
+        component: () => import("@/pages/reports/inventory.vue"),
+        name: "ReportsInventory",
+        meta: {
+          title: "库存报表",
+          roles: [PERMISSIONS.REPORT_INVENTORY_DETAIL]
+        }
+      },
+      {
+        path: "operations",
+        component: () => import("@/pages/reports/operations.vue"),
+        name: "ReportsOperations",
+        meta: {
+          title: "作业报表",
+          roles: [PERMISSIONS.REPORT_OPS_INBOUND]
+        }
+      },
+      {
+        path: "custom",
+        component: () => import("@/pages/reports/custom.vue"),
+        name: "ReportsCustom",
+        meta: {
+          title: "自定义报表",
+          roles: [PERMISSIONS.REPORT_CUSTOM_LIST]
+        }
+      },
+      {
+        path: "export",
+        component: () => import("@/pages/reports/export.vue"),
+        name: "ReportsExport",
+        meta: {
+          title: "数据导出",
+          roles: [PERMISSIONS.REPORT_EXPORT_CREATE]
+        }
+      }
+    ]
+  },
+  {
+    path: "/system",
+    component: Layouts,
+    redirect: "/system/users",
+    name: "System",
+    meta: {
+      title: "系统管理",
+      elIcon: "Setting",
+      roles: [PERMISSIONS.SYSTEM_USER_LIST]
+    },
+    children: [
+      {
+        path: "users",
+        component: () => import("@/pages/system/users.vue"),
+        name: "SystemUsers",
+        meta: {
+          title: "用户管理",
+          roles: [PERMISSIONS.SYSTEM_USER_LIST]
+        }
+      },
+      {
+        path: "roles",
+        component: () => import("@/pages/system/roles.vue"),
+        name: "SystemRoles",
+        meta: {
+          title: "角色权限",
+          roles: [PERMISSIONS.SYSTEM_ROLE_LIST]
+        }
+      },
+      {
+        path: "menus",
+        component: () => import("@/pages/system/menus.vue"),
+        name: "SystemMenus",
+        meta: {
+          title: "菜单管理",
+          roles: [PERMISSIONS.SYSTEM_MENU_LIST]
+        }
+      },
+      {
+        path: "settings",
+        component: () => import("@/pages/system/settings.vue"),
+        name: "SystemSettings",
+        meta: {
+          title: "系统配置",
+          roles: [PERMISSIONS.SYSTEM_SETTING_VIEW]
+        }
+      },
+      {
+        path: "op-logs",
+        component: () => import("@/pages/system/op-logs.vue"),
+        name: "SystemOpLogs",
+        meta: {
+          title: "操作日志",
+          roles: [PERMISSIONS.SYSTEM_LOG_LIST]
+        }
+      },
+      {
+        path: "api-monitor",
+        component: () => import("@/pages/system/api-monitor.vue"),
+        name: "SystemApiMonitor",
+        meta: {
+          title: "接口监控",
+          roles: [PERMISSIONS.SYSTEM_APM_METRICS]
         }
       }
     ]
