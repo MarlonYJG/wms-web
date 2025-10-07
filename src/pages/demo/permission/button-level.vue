@@ -8,10 +8,10 @@ import SwitchRoles from "./components/SwitchRoles.vue"
     <SwitchRoles />
     <el-card header="权限指令 v-permission 示例" shadow="never" class="margin-top-20">
       <el-button v-permission="['admin']">
-        admin
+        管理员
       </el-button>
       <el-button v-permission="['admin', 'editor']">
-        admin 和 editor
+        管理员 和 编辑者
       </el-button>
     </el-card>
     <el-card header="权限函数 checkPermission 示例" shadow="never" class="margin-top-20">
@@ -20,12 +20,12 @@ import SwitchRoles from "./components/SwitchRoles.vue"
         这种情况下你可以通过 v-if + checkPermission 来实现
       </el-text>
       <el-tabs type="border-card" class="margin-top-20">
-        <el-tab-pane v-if="checkPermission(['admin'])" label="admin">
+        <el-tab-pane v-if="checkPermission(['admin'])" label="管理员">
           <el-tag size="large">
             v-if="checkPermission(['admin'])"
           </el-tag>
         </el-tab-pane>
-        <el-tab-pane v-if="checkPermission(['admin', 'editor'])" label="admin 和 editor">
+        <el-tab-pane v-if="checkPermission(['admin', 'editor'])" label="管理员 和 编辑者">
           <el-tag size="large">
             v-if="checkPermission(['admin', 'editor'])"
           </el-tag>

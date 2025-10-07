@@ -204,9 +204,9 @@ listenerRouteChange((route) => {
 
 <style lang="scss" scoped>
 .tags-view-container {
-  height: var(--v3-tagsview-height);
+  height: var(--wms-tagsview-height);
   width: 100%;
-  color: var(--v3-tagsview-text-color);
+  color: var(--wms-tagsview-text-color);
   overflow: hidden;
   .tags-view-wrapper {
     .tags-view-item {
@@ -217,9 +217,9 @@ listenerRouteChange((route) => {
       cursor: pointer;
       height: 26px;
       line-height: 26px;
-      border: 1px solid var(--v3-tagsview-tag-border-color);
-      border-radius: var(--v3-tagsview-tag-border-radius);
-      background-color: var(--v3-tagsview-tag-bg-color);
+      border: 1px solid var(--wms-tagsview-tag-border-color);
+      border-radius: var(--wms-tagsview-tag-border-radius);
+      background-color: var(--wms-tagsview-tag-bg-color);
       padding: 0 8px;
       font-size: 12px;
       margin-left: 5px;
@@ -231,17 +231,17 @@ listenerRouteChange((route) => {
         margin-right: 5px;
       }
       &.active {
-        background-color: var(--v3-tagsview-tag-active-bg-color);
-        color: var(--v3-tagsview-tag-active-text-color);
-        border-color: var(--v3-tagsview-tag-active-border-color);
+        background-color: var(--wms-tagsview-tag-active-bg-color);
+        color: var(--wms-tagsview-tag-active-text-color);
+        border-color: var(--wms-tagsview-tag-active-border-color);
       }
       .el-icon {
         margin-left: 5px;
         margin-right: 1px;
         border-radius: 50%;
         &:hover {
-          background-color: var(--v3-tagsview-tag-icon-hover-bg-color);
-          color: var(--v3-tagsview-tag-icon-hover-color);
+          background-color: var(--wms-tagsview-tag-icon-hover-bg-color);
+          color: var(--wms-tagsview-tag-icon-hover-color);
         }
       }
     }
@@ -254,16 +254,16 @@ listenerRouteChange((route) => {
     padding: 5px 0;
     border-radius: 4px;
     font-size: 12px;
-    color: var(--v3-tagsview-contextmenu-text-color);
-    background-color: var(--v3-tagsview-contextmenu-bg-color);
-    box-shadow: var(--v3-tagsview-contextmenu-box-shadow);
+    color: var(--wms-tagsview-contextmenu-text-color);
+    background-color: var(--wms-tagsview-contextmenu-bg-color);
+    box-shadow: var(--wms-tagsview-contextmenu-box-shadow);
     li {
       margin: 0;
       padding: 7px 16px;
       cursor: pointer;
       &:hover {
-        color: var(--v3-tagsview-contextmenu-hover-text-color);
-        background-color: var(--v3-tagsview-contextmenu-hover-bg-color);
+        color: var(--wms-tagsview-contextmenu-hover-text-color);
+        background-color: var(--wms-tagsview-contextmenu-hover-bg-color);
       }
     }
   }

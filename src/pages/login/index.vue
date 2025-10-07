@@ -23,7 +23,7 @@ const captchaToken = ref("")
 const captchaImage = ref("")
 
 const loginFormData: LoginRequestData = reactive({
-  username: "admin",
+  username: "管理员",
   password: "12345678",
   code: "",
   token: ""

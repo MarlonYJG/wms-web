@@ -71,9 +71,9 @@ $transition-time: 0.35s;
 }
 
 .sidebar-container {
-  background-color: var(--v3-sidebar-menu-bg-color);
+  background-color: var(--wms-sidebar-menu-bg-color);
   transition: width $transition-time;
-  width: var(--v3-sidebar-width);
+  width: var(--wms-sidebar-width);
   height: 100%;
   position: fixed;
   top: 0;
@@ -81,13 +81,13 @@ $transition-time: 0.35s;
   left: 0;
   z-index: 1001;
   overflow: hidden;
-  border-right: var(--v3-sidebar-border-right);
+  border-right: var(--wms-sidebar-border-right);
 }
 
 .main-container {
   min-height: 100%;
   transition: margin-left $transition-time;
-  margin-left: var(--v3-sidebar-width);
+  margin-left: var(--wms-sidebar-width);
   position: relative;
 }
 
@@ -96,48 +96,48 @@ $transition-time: 0.35s;
   top: 0;
   right: 0;
   z-index: 9;
-  width: calc(100% - var(--v3-sidebar-width));
+  width: calc(100% - var(--wms-sidebar-width));
   transition: width $transition-time;
 }
 
 .layout-header {
   position: relative;
   z-index: 9;
-  background-color: var(--v3-header-bg-color);
-  box-shadow: var(--v3-header-box-shadow);
-  border-bottom: var(--v3-header-border-bottom);
+  background-color: var(--wms-header-bg-color);
+  box-shadow: var(--wms-header-box-shadow);
+  border-bottom: var(--wms-header-border-bottom);
 }
 
 .app-main {
-  min-height: calc(100vh - var(--v3-navigationbar-height));
+  min-height: calc(100vh - var(--wms-navigationbar-height));
   position: relative;
   overflow: hidden;
 }
 
 .fixed-header + .app-main {
-  padding-top: var(--v3-navigationbar-height);
+  padding-top: var(--wms-navigationbar-height);
   height: 100vh;
   overflow: auto;
 }
 
 .hasTagsView {
   .app-main {
-    min-height: calc(100vh - var(--v3-header-height));
+    min-height: calc(100vh - var(--wms-header-height));
   }
   .fixed-header + .app-main {
-    padding-top: var(--v3-header-height);
+    padding-top: var(--wms-header-height);
   }
 }
 
 .hideSidebar {
   .sidebar-container {
-    width: var(--v3-sidebar-hide-width);
+    width: var(--wms-sidebar-hide-width);
   }
   .main-container {
-    margin-left: var(--v3-sidebar-hide-width);
+    margin-left: var(--wms-sidebar-hide-width);
   }
   .fixed-header {
-    width: calc(100% - var(--v3-sidebar-hide-width));
+    width: calc(100% - var(--wms-sidebar-hide-width));
   }
 }
 
@@ -145,7 +145,7 @@ $transition-time: 0.35s;
 .mobile {
   .sidebar-container {
     transition: transform $transition-time;
-    width: var(--v3-sidebar-width);
+    width: var(--wms-sidebar-width);
   }
   .main-container {
     margin-left: 0px;
@@ -161,7 +161,7 @@ $transition-time: 0.35s;
     .sidebar-container {
       pointer-events: none;
       transition-duration: 0.3s;
-      transform: translate3d(calc(0px - var(--v3-sidebar-width)), 0, 0);
+      transform: translate3d(calc(0px - var(--wms-sidebar-width)), 0, 0);
     }
   }
   // 既是 mobile 又是顶部或混合布局模式

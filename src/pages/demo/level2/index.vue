@@ -6,7 +6,7 @@
       </span>
       <el-link
         type="primary"
-        href="https://github.com/un-pany/v3-admin-vite/blob/main/src/router/config.ts"
+        href="https://github.com/wms-team/wms-web/blob/main/src/router/config.ts"
         target="_blank"
       >
         src/router/config.ts

@@ -54,7 +54,7 @@ $transition-time: 0.35s;
   display: flex;
   .logo {
     flex: none;
-    width: var(--v3-sidebar-width);
+    width: var(--wms-sidebar-width);
   }
   .content {
     flex: 1;
@@ -63,9 +63,9 @@ $transition-time: 0.35s;
 }
 
 .layout-header {
-  background-color: var(--v3-header-bg-color);
-  box-shadow: var(--v3-header-box-shadow);
-  border-bottom: var(--v3-header-border-bottom);
+  background-color: var(--wms-header-bg-color);
+  box-shadow: var(--wms-header-box-shadow);
+  border-bottom: var(--wms-header-border-bottom);
 }
 
 .main-container {
@@ -75,39 +75,39 @@ $transition-time: 0.35s;
 .sidebar-container {
   background-color: var(--el-menu-bg-color);
   transition: width $transition-time;
-  width: var(--v3-sidebar-width);
+  width: var(--wms-sidebar-width);
   height: 100%;
   position: fixed;
   left: 0;
   z-index: 1001;
   overflow: hidden;
-  border-right: var(--v3-sidebar-border-right);
-  padding-top: var(--v3-navigationbar-height);
+  border-right: var(--wms-sidebar-border-right);
+  padding-top: var(--wms-navigationbar-height);
 }
 
 .app-main {
   transition: padding-left $transition-time;
-  padding-top: var(--v3-navigationbar-height);
-  padding-left: var(--v3-sidebar-width);
+  padding-top: var(--wms-navigationbar-height);
+  padding-left: var(--wms-sidebar-width);
   height: 100vh;
   overflow: auto;
 }
 
 .hideSidebar {
   .sidebar-container {
-    width: var(--v3-sidebar-hide-width);
+    width: var(--wms-sidebar-hide-width);
   }
   .app-main {
-    padding-left: var(--v3-sidebar-hide-width);
+    padding-left: var(--wms-sidebar-hide-width);
   }
 }
 
 .hasTagsView {
   .sidebar-container {
-    padding-top: var(--v3-header-height);
+    padding-top: var(--wms-header-height);
   }
   .app-main {
-    padding-top: var(--v3-header-height);
+    padding-top: var(--wms-header-height);
   }
 }
 </style>

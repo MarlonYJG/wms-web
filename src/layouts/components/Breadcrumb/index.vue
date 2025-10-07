@@ -52,7 +52,7 @@ listenerRouteChange((route) => {
 
 <style lang="scss" scoped>
 .el-breadcrumb {
-  line-height: var(--v3-navigationbar-height);
+  line-height: var(--wms-navigationbar-height);
   .no-redirect {
     color: var(--el-text-color-placeholder);
   }

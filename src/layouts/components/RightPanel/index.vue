@@ -19,7 +19,7 @@ const show = ref(false)
 .handle-button {
   width: 48px;
   height: 48px;
-  background-color: var(--v3-rightpanel-button-bg-color);
+  background-color: var(--wms-rightpanel-button-bg-color);
   position: fixed;
   top: 45%;
   right: 0;

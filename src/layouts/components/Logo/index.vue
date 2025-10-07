@@ -30,8 +30,8 @@ const { isLeft, isTop } = useLayoutMode()
 .layout-logo-container {
   position: relative;
   width: 100%;
-  height: var(--v3-header-height);
-  line-height: var(--v3-header-height);
+  height: var(--wms-header-height);
+  line-height: var(--wms-header-height);
   text-align: center;
   overflow: hidden;
   .layout-logo {
@@ -44,8 +44,8 @@ const { isLeft, isTop } = useLayoutMode()
 }
 
 .layout-mode-top {
-  height: var(--v3-navigationbar-height);
-  line-height: var(--v3-navigationbar-height);
+  height: var(--wms-navigationbar-height);
+  line-height: var(--wms-navigationbar-height);
 }
 
 .collapse {

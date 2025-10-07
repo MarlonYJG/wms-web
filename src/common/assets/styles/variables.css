@@ -2,71 +2,71 @@
 
 :root {
   /* Body */
-  --v3-body-text-color: var(--el-text-color-primary);
-  --v3-body-bg-color: var(--el-bg-color-page);
+  --wms-body-text-color: var(--el-text-color-primary);
+  --wms-body-bg-color: var(--el-bg-color-page);
   /* Header 区域 = NavigationBar 组件 + TagsView 组件 */
-  --v3-header-height: calc(
-    var(--v3-navigationbar-height) + var(--v3-tagsview-height) + var(--v3-header-border-bottom-width)
+  --wms-header-height: calc(
+    var(--wms-navigationbar-height) + var(--wms-tagsview-height) + var(--wms-header-border-bottom-width)
   );
-  --v3-header-bg-color: var(--el-bg-color);
-  --v3-header-box-shadow: var(--el-box-shadow-lighter);
-  --v3-header-border-bottom-width: 1px;
-  --v3-header-border-bottom: var(--v3-header-border-bottom-width) solid var(--el-fill-color);
+  --wms-header-bg-color: var(--el-bg-color);
+  --wms-header-box-shadow: var(--el-box-shadow-lighter);
+  --wms-header-border-bottom-width: 1px;
+  --wms-header-border-bottom: var(--wms-header-border-bottom-width) solid var(--el-fill-color);
   /* NavigationBar 组件 */
-  --v3-navigationbar-height: 50px;
-  --v3-navigationbar-text-color: var(--el-text-color-regular);
+  --wms-navigationbar-height: 50px;
+  --wms-navigationbar-text-color: var(--el-text-color-regular);
   /* Sidebar 组件（左侧模式全部生效、顶部模式全部不生效、混合模式非颜色部分生效） */
-  --v3-sidebar-width: 220px;
-  --v3-sidebar-hide-width: 58px;
-  --v3-sidebar-border-right: 1px solid var(--el-fill-color);
-  --v3-sidebar-menu-item-height: 60px;
-  --v3-sidebar-menu-tip-line-bg-color: var(--el-color-primary);
-  --v3-sidebar-menu-bg-color: #001428;
-  --v3-sidebar-menu-hover-bg-color: #409eff10;
-  --v3-sidebar-menu-text-color: #cfd3dc;
-  --v3-sidebar-menu-active-text-color: #ffffff;
+  --wms-sidebar-width: 220px;
+  --wms-sidebar-hide-width: 58px;
+  --wms-sidebar-border-right: 1px solid var(--el-fill-color);
+  --wms-sidebar-menu-item-height: 60px;
+  --wms-sidebar-menu-tip-line-bg-color: var(--el-color-primary);
+  --wms-sidebar-menu-bg-color: #001428;
+  --wms-sidebar-menu-hover-bg-color: #409eff10;
+  --wms-sidebar-menu-text-color: #cfd3dc;
+  --wms-sidebar-menu-active-text-color: #ffffff;
   /* TagsView 组件 */
-  --v3-tagsview-height: 34px;
-  --v3-tagsview-text-color: var(--el-text-color-regular);
-  --v3-tagsview-tag-active-text-color: #ffffff;
-  --v3-tagsview-tag-bg-color: var(--el-bg-color);
-  --v3-tagsview-tag-active-bg-color: var(--el-color-primary);
-  --v3-tagsview-tag-border-radius: 2px;
-  --v3-tagsview-tag-border-color: var(--el-border-color-lighter);
-  --v3-tagsview-tag-active-border-color: var(--el-color-primary);
-  --v3-tagsview-tag-icon-hover-bg-color: #00000030;
-  --v3-tagsview-tag-icon-hover-color: #ffffff;
-  --v3-tagsview-contextmenu-text-color: var(--el-text-color-regular);
-  --v3-tagsview-contextmenu-hover-text-color: var(--el-text-color-primary);
-  --v3-tagsview-contextmenu-bg-color: var(--el-bg-color-overlay);
-  --v3-tagsview-contextmenu-hover-bg-color: var(--el-fill-color);
-  --v3-tagsview-contextmenu-box-shadow: var(--el-box-shadow);
+  --wms-tagsview-height: 34px;
+  --wms-tagsview-text-color: var(--el-text-color-regular);
+  --wms-tagsview-tag-active-text-color: #ffffff;
+  --wms-tagsview-tag-bg-color: var(--el-bg-color);
+  --wms-tagsview-tag-active-bg-color: var(--el-color-primary);
+  --wms-tagsview-tag-border-radius: 2px;
+  --wms-tagsview-tag-border-color: var(--el-border-color-lighter);
+  --wms-tagsview-tag-active-border-color: var(--el-color-primary);
+  --wms-tagsview-tag-icon-hover-bg-color: #00000030;
+  --wms-tagsview-tag-icon-hover-color: #ffffff;
+  --wms-tagsview-contextmenu-text-color: var(--el-text-color-regular);
+  --wms-tagsview-contextmenu-hover-text-color: var(--el-text-color-primary);
+  --wms-tagsview-contextmenu-bg-color: var(--el-bg-color-overlay);
+  --wms-tagsview-contextmenu-hover-bg-color: var(--el-fill-color);
+  --wms-tagsview-contextmenu-box-shadow: var(--el-box-shadow);
   /* Hamburger 组件 */
-  --v3-hamburger-text-color: var(--el-text-color-primary);
+  --wms-hamburger-text-color: var(--el-text-color-primary);
   /* RightPanel 组件  */
-  --v3-rightpanel-button-bg-color: #001428;
+  --wms-rightpanel-button-bg-color: #001428;
 }
 
 /* 内容区放大时，将不需要的组件隐藏 */
 body.content-large {
   /* Header 区域 = TagsView 组件 */
-  --v3-header-height: var(--v3-tagsview-height);
+  --wms-header-height: var(--wms-tagsview-height);
   /* NavigationBar 组件 */
-  --v3-navigationbar-height: 0px;
+  --wms-navigationbar-height: 0px;
   /* Sidebar 组件 */
-  --v3-sidebar-width: 0px;
-  --v3-sidebar-hide-width: 0px;
+  --wms-sidebar-width: 0px;
+  --wms-sidebar-hide-width: 0px;
 }
 
 /* 内容区全屏时，将不需要的组件隐藏 */
 body.content-full {
   /* Header 区域 */
-  --v3-header-height: 0px;
+  --wms-header-height: 0px;
   /* NavigationBar 组件 */
-  --v3-navigationbar-height: 0px;
+  --wms-navigationbar-height: 0px;
   /* Sidebar 组件 */
-  --v3-sidebar-width: 0px;
-  --v3-sidebar-hide-width: 0px;
+  --wms-sidebar-width: 0px;
+  --wms-sidebar-hide-width: 0px;
   /* TagsView 组件 */
-  --v3-tagsview-height: 0px;
+  --wms-tagsview-height: 0px;
 }

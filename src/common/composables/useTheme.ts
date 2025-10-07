@@ -38,9 +38,9 @@ function setTheme({ clientX, clientY }: MouseEvent, value: ThemeName) {
     Math.max(clientX, window.innerWidth - clientX),
     Math.max(clientY, window.innerHeight - clientY)
   )
-  setCssVar("--v3-theme-x", `${clientX}px`)
-  setCssVar("--v3-theme-y", `${clientY}px`)
-  setCssVar("--v3-theme-r", `${maxRadius}px`)
+  setCssVar("--wms-theme-x", `${clientX}px`)
+  setCssVar("--wms-theme-y", `${clientY}px`)
+  setCssVar("--wms-theme-r", `${maxRadius}px`)
   const handler = () => {
     activeThemeName.value = value
   }

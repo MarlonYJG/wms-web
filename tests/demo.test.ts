@@ -11,15 +11,15 @@
 import { describe, expect, it } from "vitest"
 
 const author1 = {
-  name: "pany",
-  email: "939630029@qq.com",
-  url: "https://github.com/pany-ang"
+  name: "WMS Team",
+  email: "wms-team@example.com",
+  url: "https://github.com/wms-team"
 }
 
 const author2 = {
-  name: "pany",
-  email: "939630029@qq.com",
-  url: "https://github.com/pany-ang"
+  name: "WMS Team",
+  email: "wms-team@example.com",
+  url: "https://github.com/wms-team"
 }
 
 describe("这里填写作用域名称", () => {

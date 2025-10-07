@@ -142,7 +142,10 @@ onMounted(() => {
           <template #header>
             <div class="card-header">
               <span>库存预警</span>
-              <ElTag :type="(dashboardStats?.lowStockAlerts ? 'danger' : 'info') as any" v-if="dashboardStats?.lowStockAlerts">
+              <ElTag
+                :type="(dashboardStats?.lowStockAlerts ? 'danger' : 'info') as any"
+                v-if="dashboardStats?.lowStockAlerts"
+              >
                 库存不足: {{ dashboardStats.lowStockAlerts }}
               </ElTag>
               <ElTag :type="('warning') as any" v-if="dashboardStats?.expiringAlerts">
@@ -221,9 +224,11 @@ onMounted(() => {
         align-items: center;
         gap: 8px;
         margin-bottom: 8px;
+
         .icon {
           font-size: 20px;
         }
+
         .label {
           font-weight: 600;
         }
@@ -233,12 +238,15 @@ onMounted(() => {
     .stat-warehouse {
       background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
     }
+
     .stat-goods {
       background: linear-gradient(135deg, #f3e5f5 0%, #faf0ff 100%);
     }
+
     .stat-trend {
       background: linear-gradient(135deg, #e8f5e9 0%, #f1fff3 100%);
     }
+
     .stat-amount {
       background: linear-gradient(135deg, #fff3e0 0%, #fff8e6 100%);
     }

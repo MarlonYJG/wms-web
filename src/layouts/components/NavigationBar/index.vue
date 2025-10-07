@@ -5,15 +5,17 @@ import SearchMenu from "@@/components/SearchMenu/index.vue"
 import ThemeSwitch from "@@/components/ThemeSwitch/index.vue"
 import { useDevice } from "@@/composables/useDevice"
 import { useLayoutMode } from "@@/composables/useLayoutMode"
-import { UserFilled } from "@element-plus/icons-vue"
+import { removeLayoutsConfig } from "@@/utils/cache/local-storage"
+import { Refresh, Setting, UserFilled } from "@element-plus/icons-vue"
 import { useAppStore } from "@/pinia/stores/app"
 import { useSettingsStore } from "@/pinia/stores/settings"
 import { useUserStore } from "@/pinia/stores/user"
 import { Breadcrumb, Hamburger, Sidebar } from "../index"
+import SelectLayoutMode from "../Settings/SelectLayoutMode.vue"
 
 const { isMobile } = useDevice()
 
-const { isTop } = useLayoutMode()
+const { isTop, isLeft } = useLayoutMode()
 
 const router = useRouter()
 
@@ -23,7 +25,23 @@ const userStore = useUserStore()
 
 const settingsStore = useSettingsStore()
 
-const { showNotify, showThemeSwitch, showScreenfull, showSearchMenu } = storeToRefs(settingsStore)
+const {
+  showNotify,
+  showThemeSwitch,
+  showScreenfull,
+  showSearchMenu,
+  showTagsView,
+  showLogo,
+  fixedHeader,
+  showFooter,
+  cacheTagsView,
+  showWatermark,
+  showGreyMode,
+  showColorWeakness
+} = storeToRefs(settingsStore)
+
+// 设置面板显示状态
+const showSettingsPanel = ref(false)
 
 /** 切换侧边栏 */
 function toggleSidebar() {
@@ -34,6 +52,33 @@ function toggleSidebar() {
 function logout() {
   userStore.logout()
   router.push("/login")
+}
+
+/** 定义 switch 设置项 */
+const switchSettings = {
+  "显示标签栏": showTagsView,
+  "显示 Logo": showLogo,
+  "固定 Header": fixedHeader,
+  "显示页脚": showFooter,
+  "显示消息通知": showNotify,
+  "显示切换主题按钮": showThemeSwitch,
+  "显示全屏按钮": showScreenfull,
+  "显示搜索按钮": showSearchMenu,
+  "是否缓存标签栏": cacheTagsView,
+  "开启系统水印": showWatermark,
+  "显示灰色模式": showGreyMode,
+  "显示色弱模式": showColorWeakness
+}
+
+// 非左侧模式时，Header 都是 fixed 布局
+watchEffect(() => {
+  !isLeft.value && (fixedHeader.value = true)
+})
+
+/** 重置项目配置 */
+function resetLayoutsConfig() {
+  removeLayoutsConfig()
+  location.reload()
 }
 </script>
 
@@ -59,12 +104,14 @@ function logout() {
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <a target="_blank" href="https://github.com/un-pany/v3-admin-vite">
-              <el-dropdown-item>GitHub</el-dropdown-item>
-            </a>
-            <a target="_blank" href="https://gitee.com/un-pany/v3-admin-vite">
-              <el-dropdown-item>Gitee</el-dropdown-item>
-            </a>
+            <el-dropdown-item @click="showSettingsPanel = true">
+              <el-icon><Setting /></el-icon>
+              布局配置
+            </el-dropdown-item>
+            <el-dropdown-item @click="showSettingsPanel = true">
+              <el-icon><Setting /></el-icon>
+              功能配置
+            </el-dropdown-item>
             <el-dropdown-item divided @click="logout">
               退出登录
             </el-dropdown-item>
@@ -72,14 +119,33 @@ function logout() {
         </template>
       </el-dropdown>
     </div>
+
+    <!-- 设置面板 -->
+    <el-drawer v-model="showSettingsPanel" size="300px" :with-header="false">
+      <div class="setting-container">
+        <h4>布局配置</h4>
+        <SelectLayoutMode />
+        <el-divider />
+        <h4>功能配置</h4>
+        <div v-for="(settingValue, settingName, index) in switchSettings" :key="index" class="setting-item">
+          <span class="setting-name">{{ settingName }}</span>
+          <el-switch v-model="settingValue.value" :disabled="!isLeft && settingName === '固定 Header'" />
+        </div>
+        <el-button type="danger" :icon="Refresh" @click="resetLayoutsConfig">
+          重 置
+        </el-button>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
 <style lang="scss" scoped>
+@import "@@/assets/styles/mixins.scss";
+
 .navigation-bar {
-  height: var(--v3-navigationbar-height);
+  height: var(--wms-navigationbar-height);
   overflow: hidden;
-  color: var(--v3-navigationbar-text-color);
+  color: var(--wms-navigationbar-text-color);
   display: flex;
   justify-content: space-between;
   .hamburger {
@@ -133,6 +199,25 @@ function logout() {
         font-size: 16px;
       }
     }
+  }
+}
+
+.setting-container {
+  padding: 20px;
+  .setting-item {
+    font-size: 14px;
+    color: var(--el-text-color-regular);
+    padding: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .setting-name {
+      @extend %ellipsis;
+    }
+  }
+  .el-button {
+    margin-top: 40px;
+    width: 100%;
   }
 }
 </style>

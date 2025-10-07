@@ -21,8 +21,8 @@ watch(switchRoles, (value) => {
     <div class="switch-roles">
       <span>切换用户：</span>
       <el-radio-group v-model="switchRoles">
-        <el-radio-button label="editor" value="editor" />
-        <el-radio-button label="admin" value="admin" />
+        <el-radio-button label="编辑者" value="editor" />
+        <el-radio-button label="管理员" value="admin" />
       </el-radio-group>
     </div>
   </el-card>
