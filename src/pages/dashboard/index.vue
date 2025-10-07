@@ -25,12 +25,12 @@ const loading = ref(false)
 async function fetchDashboardData() {
   loading.value = true
   try {
-    const [stats, alerts] = await Promise.all([
-      getDashboardStats(),
-      getInventoryAlerts()
-    ])
-    dashboardStats.value = stats
-    inventoryAlerts.value = alerts
+    // const [stats, alerts] = await Promise.all([
+    //   getDashboardStats(),
+    //   getInventoryAlerts()
+    // ])
+    // dashboardStats.value = stats
+    // inventoryAlerts.value = alerts
   } catch (error) {
     console.error("获取仪表板数据失败:", error)
   } finally {
