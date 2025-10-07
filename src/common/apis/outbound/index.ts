@@ -1,5 +1,5 @@
+import type { OutboundOrder, OutboundOrderForm, OutboundOrderItem, OutboundOrderQuery, PickingTask } from "./type"
 import { http } from "@/http/axios"
-import type { OutboundOrder, OutboundOrderQuery, OutboundOrderForm, OutboundOrderItem, PickingTask } from "./type"
 
 /** 获取出库单列表 */
 export function getOutboundOrderList(params: OutboundOrderQuery) {

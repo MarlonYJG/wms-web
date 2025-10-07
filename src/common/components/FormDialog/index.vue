@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ref, watch, nextTick } from "vue"
-import { ElDialog, ElForm, ElFormItem, ElButton } from "element-plus"
+import { ElButton, ElDialog, ElForm, ElFormItem } from "element-plus"
+import { nextTick, ref, watch } from "vue"
 
 interface Props {
   title: string
@@ -11,9 +11,9 @@ interface Props {
   formItems: Array<{
     prop: string
     label: string
-    type: 'input' | 'textarea' | 'number' | 'select' | 'switch' | 'date' | 'datetime'
+    type: "input" | "textarea" | "number" | "select" | "switch" | "date" | "datetime"
     placeholder?: string
-    options?: Array<{ label: string; value: any }>
+    options?: Array<{ label: string, value: any }>
     min?: number
     max?: number
     rows?: number
@@ -23,14 +23,14 @@ interface Props {
 }
 
 interface Emits {
-  (e: 'update:visible', visible: boolean): void
-  (e: 'confirm', formData: Record<string, any>): void
-  (e: 'cancel'): void
+  (e: "update:visible", visible: boolean): void
+  (e: "confirm", formData: Record<string, any>): void
+  (e: "cancel"): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
-  width: '600px'
+  width: "600px"
 })
 
 const emit = defineEmits<Emits>()
@@ -47,42 +47,42 @@ watch(() => props.visible, (newVal) => {
 })
 
 // 确认
-const handleConfirm = async () => {
+async function handleConfirm() {
   if (!formRef.value) return
-  
+
   try {
     await formRef.value.validate()
-    emit('confirm', { ...props.formData })
+    emit("confirm", { ...props.formData })
   } catch (error) {
     console.error("表单验证失败:", error)
   }
 }
 
 // 取消
-const handleCancel = () => {
-  emit('cancel')
+function handleCancel() {
+  emit("cancel")
 }
 
 // 关闭对话框
-const handleClose = () => {
-  emit('update:visible', false)
+function handleClose() {
+  emit("update:visible", false)
 }
 </script>
 
 <template>
-  <el-dialog
+  <ElDialog
     :model-value="visible"
     :title="title"
     :width="width"
     @close="handleClose"
   >
-    <el-form
+    <ElForm
       ref="formRef"
       :model="formData"
       :rules="rules"
       label-width="120px"
     >
-      <el-form-item
+      <ElFormItem
         v-for="item in formItems"
         :key="item.prop"
         :label="item.label"
@@ -95,7 +95,7 @@ const handleClose = () => {
           :placeholder="item.placeholder"
           clearable
         />
-        
+
         <!-- 文本域 -->
         <el-input
           v-else-if="item.type === 'textarea'"
@@ -104,7 +104,7 @@ const handleClose = () => {
           :placeholder="item.placeholder"
           :rows="item.rows || 3"
         />
-        
+
         <!-- 数字输入框 -->
         <el-input-number
           v-else-if="item.type === 'number'"
@@ -115,7 +115,7 @@ const handleClose = () => {
           controls-position="right"
           style="width: 100%"
         />
-        
+
         <!-- 选择器 -->
         <el-select
           v-else-if="item.type === 'select'"
@@ -131,13 +131,13 @@ const handleClose = () => {
             :value="option.value"
           />
         </el-select>
-        
+
         <!-- 开关 -->
         <el-switch
           v-else-if="item.type === 'switch'"
           v-model="formData[item.prop]"
         />
-        
+
         <!-- 日期选择器 -->
         <el-date-picker
           v-else-if="item.type === 'date'"
@@ -146,7 +146,7 @@ const handleClose = () => {
           :placeholder="item.placeholder"
           style="width: 100%"
         />
-        
+
         <!-- 日期时间选择器 -->
         <el-date-picker
           v-else-if="item.type === 'datetime'"
@@ -155,21 +155,23 @@ const handleClose = () => {
           :placeholder="item.placeholder"
           style="width: 100%"
         />
-        
+
         <!-- 自定义插槽 -->
         <slot v-else-if="item.slot" :name="item.slot" :item="item" :form-data="formData" />
-      </el-form-item>
-    </el-form>
-    
+      </ElFormItem>
+    </ElForm>
+
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleCancel">取消</el-button>
-        <el-button type="primary" :loading="loading" @click="handleConfirm">
+        <ElButton @click="handleCancel">
+          取消
+        </ElButton>
+        <ElButton type="primary" :loading="loading" @click="handleConfirm">
           确定
-        </el-button>
+        </ElButton>
       </div>
     </template>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <style lang="scss" scoped>

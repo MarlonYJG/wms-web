@@ -162,8 +162,8 @@ export const constantRoutes: RouteRecordRaw[] = [
         }
       }
     ]
-  },
-  
+  }
+
 ]
 
 /**

@@ -1,5 +1,5 @@
-import { http } from "@/http/axios"
 import type { Inventory, InventoryQuery, InventoryTransaction, InventoryTransactionQuery } from "./type"
+import { http } from "@/http/axios"
 
 /** 获取库存列表 */
 export function getInventoryList(params: InventoryQuery) {
@@ -12,7 +12,7 @@ export function getInventoryDetail(id: number) {
 }
 
 /** 库存调整 */
-export function adjustInventory(data: { id: number; quantity: number; reason: string }) {
+export function adjustInventory(data: { id: number, quantity: number, reason: string }) {
   return http.post(`/inventory/${data.id}/adjust`, {
     quantity: data.quantity,
     reason: data.reason

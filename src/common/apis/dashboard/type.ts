@@ -15,7 +15,7 @@ export interface DashboardStats {
 /** 库存预警信息 */
 export interface InventoryAlert {
   id: number
-  type: 'low_stock' | 'expiring' | 'expired'
+  type: "low_stock" | "expiring" | "expired"
   typeName: string
   productSkuId: number
   productName: string
@@ -32,7 +32,7 @@ export interface InventoryAlert {
 /** 最近活动信息 */
 export interface RecentActivity {
   id: number
-  type: 'inbound' | 'outbound' | 'inventory' | 'system'
+  type: "inbound" | "outbound" | "inventory" | "system"
   typeName: string
   title: string
   description: string

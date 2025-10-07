@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { ref, reactive, watch, nextTick } from "vue"
-import { ElDialog, ElForm, ElFormItem, ElInput, ElInputNumber, ElButton, ElMessage } from "element-plus"
-import { adjustInventory } from "@/common/apis/inventory"
 import type { Inventory } from "@/common/apis/inventory/type"
+import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElInputNumber, ElMessage } from "element-plus"
+import { nextTick, reactive, ref, watch } from "vue"
+import { adjustInventory } from "@/common/apis/inventory"
 
 interface Emits {
-  (e: 'success'): void
+  (e: "success"): void
 }
 
 const emit = defineEmits<Emits>()
@@ -43,7 +43,7 @@ watch(() => currentRecord.value, (newRecord) => {
 }, { immediate: true })
 
 // 重置表单
-const resetForm = () => {
+function resetForm() {
   Object.assign(formData, {
     quantity: 0,
     reason: ""
@@ -54,41 +54,41 @@ const resetForm = () => {
 }
 
 // 打开对话框
-const open = (record: Inventory) => {
+function open(record: Inventory) {
   currentRecord.value = record
   visible.value = true
 }
 
 // 关闭对话框
-const close = () => {
+function close() {
   visible.value = false
   currentRecord.value = undefined
   resetForm()
 }
 
 // 确认调整
-const handleConfirm = async () => {
+async function handleConfirm() {
   if (!formRef.value || !currentRecord.value) return
-  
+
   try {
     await formRef.value.validate()
-    
+
     await adjustInventory({
       id: currentRecord.value.id,
       quantity: formData.quantity,
       reason: formData.reason
     })
-    
+
     ElMessage.success("库存调整成功")
     close()
-    emit('success')
+    emit("success")
   } catch (error) {
     console.error("库存调整失败:", error)
   }
 }
 
 // 取消
-const handleCancel = () => {
+function handleCancel() {
   close()
 }
 
@@ -100,7 +100,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog
+  <ElDialog
     v-model="visible"
     title="库存调整"
     width="500px"
@@ -111,17 +111,19 @@ defineExpose({
       <p><strong>SKU编码：</strong>{{ currentRecord.skuCode }}</p>
       <p><strong>库位：</strong>{{ currentRecord.locationCode }}</p>
       <p><strong>当前库存：</strong>{{ currentRecord.quantity }}</p>
-      <p v-if="currentRecord.batchNo"><strong>批次号：</strong>{{ currentRecord.batchNo }}</p>
+      <p v-if="currentRecord.batchNo">
+        <strong>批次号：</strong>{{ currentRecord.batchNo }}
+      </p>
     </div>
-    
-    <el-form
+
+    <ElForm
       ref="formRef"
       :model="formData"
       :rules="rules"
       label-width="100px"
     >
-      <el-form-item label="调整数量" prop="quantity">
-        <el-input-number
+      <ElFormItem label="调整数量" prop="quantity">
+        <ElInputNumber
           v-model="formData.quantity"
           placeholder="请输入调整数量"
           controls-position="right"
@@ -130,10 +132,10 @@ defineExpose({
         <div class="form-tip">
           正数为增加库存，负数为减少库存
         </div>
-      </el-form-item>
-      
-      <el-form-item label="调整原因" prop="reason">
-        <el-input
+      </ElFormItem>
+
+      <ElFormItem label="调整原因" prop="reason">
+        <ElInput
           v-model="formData.reason"
           type="textarea"
           placeholder="请输入调整原因"
@@ -141,16 +143,20 @@ defineExpose({
           maxlength="200"
           show-word-limit
         />
-      </el-form-item>
-    </el-form>
-    
+      </ElFormItem>
+    </ElForm>
+
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleCancel">取消</el-button>
-        <el-button type="primary" @click="handleConfirm">确认调整</el-button>
+        <ElButton @click="handleCancel">
+          取消
+        </ElButton>
+        <ElButton type="primary" @click="handleConfirm">
+          确认调整
+        </ElButton>
       </div>
     </template>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <style lang="scss" scoped>
@@ -159,7 +165,7 @@ defineExpose({
   padding: 15px;
   border-radius: 4px;
   margin-bottom: 20px;
-  
+
   p {
     margin: 5px 0;
     font-size: 14px;

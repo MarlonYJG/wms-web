@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from "vue"
-import { ElMessage, ElMessageBox } from "element-plus"
-import { getInventoryList, adjustInventory, transferInventory } from "@/common/apis/inventory"
 import type { Inventory, InventoryQuery } from "@/common/apis/inventory/type"
+import { ElMessage, ElMessageBox } from "element-plus"
+import { onMounted, reactive, ref } from "vue"
+import { adjustInventory, getInventoryList, transferInventory } from "@/common/apis/inventory"
 import InventoryAdjustDialog from "./components/InventoryAdjustDialog.vue"
 import InventoryTransferDialog from "./components/InventoryTransferDialog.vue"
 
@@ -28,7 +28,7 @@ const adjustDialog = ref<InstanceType<typeof InventoryAdjustDialog>>()
 const transferDialog = ref<InstanceType<typeof InventoryTransferDialog>>()
 
 // 获取库存列表
-const fetchInventoryList = async () => {
+async function fetchInventoryList() {
   loading.value = true
   try {
     const response = await getInventoryList(queryParams)
@@ -42,13 +42,13 @@ const fetchInventoryList = async () => {
 }
 
 // 搜索
-const handleSearch = () => {
+function handleSearch() {
   queryParams.page = 1
   fetchInventoryList()
 }
 
 // 重置搜索
-const handleReset = () => {
+function handleReset() {
   Object.assign(queryParams, {
     page: 1,
     size: 10,
@@ -63,22 +63,22 @@ const handleReset = () => {
 }
 
 // 库存调整
-const handleAdjust = (row: Inventory) => {
+function handleAdjust(row: Inventory) {
   adjustDialog.value?.open(row)
 }
 
 // 库存转移
-const handleTransfer = (row: Inventory) => {
+function handleTransfer(row: Inventory) {
   transferDialog.value?.open(row)
 }
 
 // 分页变化
-const handlePageChange = (page: number) => {
+function handlePageChange(page: number) {
   queryParams.page = page
   fetchInventoryList()
 }
 
-const handleSizeChange = (size: number) => {
+function handleSizeChange(size: number) {
   queryParams.size = size
   queryParams.page = 1
   fetchInventoryList()
@@ -135,8 +135,12 @@ onMounted(() => {
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleSearch">搜索</el-button>
-          <el-button @click="handleReset">重置</el-button>
+          <el-button type="primary" @click="handleSearch">
+            搜索
+          </el-button>
+          <el-button @click="handleReset">
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -223,25 +227,25 @@ onMounted(() => {
 <style lang="scss" scoped>
 .inventory-container {
   padding: 20px;
-  
+
   .search-card {
     margin-bottom: 20px;
   }
-  
+
   .table-card {
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    
+
     .pagination-container {
       margin-top: 20px;
       display: flex;
       justify-content: center;
     }
   }
-  
+
   .text-danger {
     color: #f56c6c;
   }

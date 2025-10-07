@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import { ref, reactive, watch, nextTick } from "vue"
-import { ElDialog, ElForm, ElFormItem, ElInput, ElSwitch, ElButton } from "element-plus"
 import type { Warehouse, WarehouseForm } from "@/common/apis/warehouse/type"
+import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElSwitch } from "element-plus"
+import { nextTick, reactive, ref, watch } from "vue"
 
 interface Props {
-  type: 'create' | 'edit'
+  type: "create" | "edit"
   record?: Warehouse
 }
 
 interface Emits {
-  (e: 'save', data: WarehouseForm): void
+  (e: "save", data: WarehouseForm): void
 }
 
 const props = defineProps<Props>()
@@ -54,7 +54,7 @@ watch(() => props.record, (newRecord) => {
 }, { immediate: true })
 
 // 重置表单
-const resetForm = () => {
+function resetForm() {
   Object.assign(formData, {
     name: "",
     code: "",
@@ -67,30 +67,30 @@ const resetForm = () => {
 }
 
 // 打开对话框
-const open = () => {
+function open() {
   visible.value = true
 }
 
 // 关闭对话框
-const close = () => {
+function close() {
   visible.value = false
   resetForm()
 }
 
 // 确认保存
-const handleConfirm = async () => {
+async function handleConfirm() {
   if (!formRef.value) return
-  
+
   try {
     await formRef.value.validate()
-    emit('save', { ...formData })
+    emit("save", { ...formData })
   } catch (error) {
     console.error("表单验证失败:", error)
   }
 }
 
 // 取消
-const handleCancel = () => {
+function handleCancel() {
   close()
 }
 
@@ -102,38 +102,38 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog
+  <ElDialog
     v-model="visible"
     :title="type === 'create' ? '新增仓库' : '编辑仓库'"
     width="600px"
     @close="handleCancel"
   >
-    <el-form
+    <ElForm
       ref="formRef"
       :model="formData"
       :rules="rules"
       label-width="100px"
     >
-      <el-form-item label="仓库名称" prop="name">
-        <el-input
+      <ElFormItem label="仓库名称" prop="name">
+        <ElInput
           v-model="formData.name"
           placeholder="请输入仓库名称"
           maxlength="100"
           show-word-limit
         />
-      </el-form-item>
-      
-      <el-form-item label="仓库编码" prop="code">
-        <el-input
+      </ElFormItem>
+
+      <ElFormItem label="仓库编码" prop="code">
+        <ElInput
           v-model="formData.code"
           placeholder="请输入仓库编码"
           maxlength="50"
           show-word-limit
         />
-      </el-form-item>
-      
-      <el-form-item label="地址">
-        <el-input
+      </ElFormItem>
+
+      <ElFormItem label="地址">
+        <ElInput
           v-model="formData.address"
           type="textarea"
           placeholder="请输入仓库地址"
@@ -141,26 +141,28 @@ defineExpose({
           maxlength="255"
           show-word-limit
         />
-      </el-form-item>
-      
-      <el-form-item label="状态">
-        <el-switch
+      </ElFormItem>
+
+      <ElFormItem label="状态">
+        <ElSwitch
           v-model="formData.isEnabled"
           active-text="启用"
           inactive-text="禁用"
         />
-      </el-form-item>
-    </el-form>
-    
+      </ElFormItem>
+    </ElForm>
+
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleCancel">取消</el-button>
-        <el-button type="primary" @click="handleConfirm">
+        <ElButton @click="handleCancel">
+          取消
+        </ElButton>
+        <ElButton type="primary" @click="handleConfirm">
           {{ type === 'create' ? '创建' : '更新' }}
-        </el-button>
+        </ElButton>
       </div>
     </template>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <style lang="scss" scoped>

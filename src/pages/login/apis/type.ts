@@ -1,7 +1,7 @@
 /*
  * @Author: Marlon
  * @Date: 2025-10-06 13:22:51
- * @Description: 
+ * @Description:
  */
 export interface LoginRequestData {
   username: string
@@ -16,4 +16,3 @@ export interface NumericCaptchaInitData {
   token: string
   imageBase64: string
 }
-

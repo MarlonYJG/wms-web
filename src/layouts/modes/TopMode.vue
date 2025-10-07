@@ -64,7 +64,9 @@ $transition-time: 0.35s;
   transition: padding-left $transition-time;
   padding-top: var(--wms-navigationbar-height);
   height: 100vh;
-  overflow: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .hasTagsView {

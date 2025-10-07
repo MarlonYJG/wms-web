@@ -90,7 +90,9 @@ $transition-time: 0.35s;
   padding-top: var(--wms-navigationbar-height);
   padding-left: var(--wms-sidebar-width);
   height: 100vh;
-  overflow: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .hideSidebar {

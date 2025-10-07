@@ -1,5 +1,5 @@
+import type { Warehouse, WarehouseForm, WarehouseQuery } from "./type"
 import { http } from "@/http/axios"
-import type { Warehouse, WarehouseQuery, WarehouseForm } from "./type"
 
 /** 获取仓库列表 */
 export function getWarehouseList(params: WarehouseQuery) {

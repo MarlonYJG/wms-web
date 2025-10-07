@@ -1,5 +1,5 @@
-import { http } from "@/http/axios"
 import type { DashboardStats, InventoryAlert, RecentActivity } from "./type"
+import { http } from "@/http/axios"
 
 /** 获取仪表板统计数据 */
 export function getDashboardStats() {

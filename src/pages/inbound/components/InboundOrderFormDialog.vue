@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import { ref, reactive, watch, nextTick } from "vue"
-import { ElDialog, ElForm, ElFormItem, ElInput, ElInputNumber, ElButton, ElTable, ElTableColumn, ElMessage } from "element-plus"
 import type { InboundOrder, InboundOrderForm } from "@/common/apis/inbound/type"
+import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElInputNumber, ElMessage, ElTable, ElTableColumn } from "element-plus"
+import { nextTick, reactive, ref, watch } from "vue"
 
 interface Props {
-  type: 'create' | 'edit'
+  type: "create" | "edit"
   record?: InboundOrder
 }
 
 interface Emits {
-  (e: 'save', data: InboundOrderForm): void
+  (e: "save", data: InboundOrderForm): void
 }
 
 const props = defineProps<Props>()
@@ -53,7 +53,7 @@ watch(() => props.record, (newRecord) => {
 }, { immediate: true })
 
 // 重置表单
-const resetForm = () => {
+function resetForm() {
   Object.assign(formData, {
     warehouseId: 0,
     supplierId: 0,
@@ -65,18 +65,18 @@ const resetForm = () => {
 }
 
 // 打开对话框
-const open = () => {
+function open() {
   visible.value = true
 }
 
 // 关闭对话框
-const close = () => {
+function close() {
   visible.value = false
   resetForm()
 }
 
 // 添加商品
-const addItem = () => {
+function addItem() {
   formData.items.push({
     productSkuId: 0,
     expectedQuantity: 0
@@ -84,30 +84,30 @@ const addItem = () => {
 }
 
 // 删除商品
-const removeItem = (index: number) => {
+function removeItem(index: number) {
   formData.items.splice(index, 1)
 }
 
 // 确认保存
-const handleConfirm = async () => {
+async function handleConfirm() {
   if (!formRef.value) return
-  
+
   try {
     await formRef.value.validate()
-    
+
     if (formData.items.length === 0) {
       ElMessage.error("请至少添加一个商品")
       return
     }
-    
-    emit('save', { ...formData })
+
+    emit("save", { ...formData })
   } catch (error) {
     console.error("表单验证失败:", error)
   }
 }
 
 // 取消
-const handleCancel = () => {
+function handleCancel() {
   close()
 }
 
@@ -119,87 +119,91 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog
+  <ElDialog
     v-model="visible"
     :title="type === 'create' ? '新增入库单' : '编辑入库单'"
     width="800px"
     @close="handleCancel"
   >
-    <el-form
+    <ElForm
       ref="formRef"
       :model="formData"
       :rules="rules"
       label-width="100px"
     >
-      <el-form-item label="仓库ID" prop="warehouseId">
-        <el-input-number
+      <ElFormItem label="仓库ID" prop="warehouseId">
+        <ElInputNumber
           v-model="formData.warehouseId"
           placeholder="请输入仓库ID"
           :min="1"
           controls-position="right"
           style="width: 100%"
         />
-      </el-form-item>
-      
-      <el-form-item label="供应商ID" prop="supplierId">
-        <el-input-number
+      </ElFormItem>
+
+      <ElFormItem label="供应商ID" prop="supplierId">
+        <ElInputNumber
           v-model="formData.supplierId"
           placeholder="请输入供应商ID"
           :min="1"
           controls-position="right"
           style="width: 100%"
         />
-      </el-form-item>
-      
-      <el-form-item label="商品明细">
+      </ElFormItem>
+
+      <ElFormItem label="商品明细">
         <div class="items-container">
           <div class="items-header">
             <span>商品明细</span>
-            <el-button type="primary" size="small" @click="addItem">添加商品</el-button>
+            <ElButton type="primary" size="small" @click="addItem">
+              添加商品
+            </ElButton>
           </div>
-          
-          <el-table :data="formData.items" style="width: 100%" max-height="300">
-            <el-table-column label="商品SKU ID" width="150">
+
+          <ElTable :data="formData.items" style="width: 100%" max-height="300">
+            <ElTableColumn label="商品SKU ID" width="150">
               <template #default="{ row, $index }">
-                <el-input-number
+                <ElInputNumber
                   v-model="row.productSkuId"
                   :min="1"
                   controls-position="right"
                   style="width: 100%"
                 />
               </template>
-            </el-table-column>
-            <el-table-column label="预期数量" width="150">
+            </ElTableColumn>
+            <ElTableColumn label="预期数量" width="150">
               <template #default="{ row, $index }">
-                <el-input-number
+                <ElInputNumber
                   v-model="row.expectedQuantity"
                   :min="1"
                   controls-position="right"
                   style="width: 100%"
                 />
               </template>
-            </el-table-column>
-            <el-table-column label="操作" width="80">
+            </ElTableColumn>
+            <ElTableColumn label="操作" width="80">
               <template #default="{ row, $index }">
-                <el-button type="danger" size="small" @click="removeItem($index)">
+                <ElButton type="danger" size="small" @click="removeItem($index)">
                   删除
-                </el-button>
+                </ElButton>
               </template>
-            </el-table-column>
-          </el-table>
+            </ElTableColumn>
+          </ElTable>
         </div>
-      </el-form-item>
-    </el-form>
-    
+      </ElFormItem>
+    </ElForm>
+
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleCancel">取消</el-button>
-        <el-button type="primary" @click="handleConfirm">
+        <ElButton @click="handleCancel">
+          取消
+        </ElButton>
+        <ElButton type="primary" @click="handleConfirm">
           {{ type === 'create' ? '创建' : '更新' }}
-        </el-button>
+        </ElButton>
       </div>
     </template>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <style lang="scss" scoped>

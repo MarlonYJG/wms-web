@@ -19,9 +19,9 @@ const settingsStore = useSettingsStore()
           </keep-alive>
         </transition>
       </router-view>
-      <!-- 页脚 -->
-      <Footer v-if="settingsStore.showFooter" />
     </div>
+    <!-- 页脚 -->
+    <Footer v-if="settingsStore.showFooter" />
     <!-- 返回顶部 -->
     <el-backtop />
     <!-- 返回顶部（固定 Header 情况下） -->
@@ -35,16 +35,17 @@ const settingsStore = useSettingsStore()
 .app-main {
   width: 100%;
   display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .app-scrollbar {
   flex-grow: 1;
   overflow: auto;
   @extend %scrollbar;
-  display: flex;
-  flex-direction: column;
+
   .app-container-grow {
-    flex-grow: 1;
+    min-height: 100%;
   }
 }
 </style>

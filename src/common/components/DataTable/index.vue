@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ref, computed } from "vue"
-import { ElTable, ElTableColumn, ElPagination, ElButton, ElInput, ElSelect, ElOption } from "element-plus"
+import { ElButton, ElInput, ElOption, ElPagination, ElSelect, ElTable, ElTableColumn } from "element-plus"
+import { computed, ref } from "vue"
 
 interface Props {
   data: any[]
@@ -21,17 +21,17 @@ interface Props {
   searchFields?: Array<{
     prop: string
     label: string
-    type: 'input' | 'select'
-    options?: Array<{ label: string; value: any }>
+    type: "input" | "select"
+    options?: Array<{ label: string, value: any }>
     placeholder?: string
   }>
 }
 
 interface Emits {
-  (e: 'page-change', page: number): void
-  (e: 'size-change', size: number): void
-  (e: 'search', params: Record<string, any>): void
-  (e: 'reset'): void
+  (e: "page-change", page: number): void
+  (e: "size-change", size: number): void
+  (e: "search", params: Record<string, any>): void
+  (e: "reset"): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -50,32 +50,32 @@ const emit = defineEmits<Emits>()
 const searchForm = ref<Record<string, any>>({})
 
 // 初始化搜索表单
-const initSearchForm = () => {
+function initSearchForm() {
   const form: Record<string, any> = {}
-  props.searchFields.forEach(field => {
-    form[field.prop] = ''
+  props.searchFields.forEach((field) => {
+    form[field.prop] = ""
   })
   searchForm.value = form
 }
 
 // 搜索
-const handleSearch = () => {
-  emit('search', { ...searchForm.value })
+function handleSearch() {
+  emit("search", { ...searchForm.value })
 }
 
 // 重置搜索
-const handleReset = () => {
+function handleReset() {
   initSearchForm()
-  emit('reset')
+  emit("reset")
 }
 
 // 分页变化
-const handlePageChange = (page: number) => {
-  emit('page-change', page)
+function handlePageChange(page: number) {
+  emit("page-change", page)
 }
 
-const handleSizeChange = (size: number) => {
-  emit('size-change', size)
+function handleSizeChange(size: number) {
+  emit("size-change", size)
 }
 
 // 初始化
@@ -92,37 +92,41 @@ initSearchForm()
           :key="field.prop"
           :label="field.label"
         >
-          <el-input
+          <ElInput
             v-if="field.type === 'input'"
             v-model="searchForm[field.prop]"
             :placeholder="field.placeholder || `请输入${field.label}`"
             clearable
             @keyup.enter="handleSearch"
           />
-          <el-select
+          <ElSelect
             v-else-if="field.type === 'select'"
             v-model="searchForm[field.prop]"
             :placeholder="field.placeholder || `请选择${field.label}`"
             clearable
           >
-            <el-option
+            <ElOption
               v-for="option in field.options"
               :key="option.value"
               :label="option.label"
               :value="option.value"
             />
-          </el-select>
+          </ElSelect>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleSearch">搜索</el-button>
-          <el-button @click="handleReset">重置</el-button>
+          <ElButton type="primary" @click="handleSearch">
+            搜索
+          </ElButton>
+          <ElButton @click="handleReset">
+            重置
+          </ElButton>
         </el-form-item>
       </el-form>
     </div>
 
     <!-- 数据表格 -->
-    <el-table :data="data" v-loading="loading" stripe>
-      <el-table-column
+    <ElTable :data="data" v-loading="loading" stripe>
+      <ElTableColumn
         v-for="column in columns"
         :key="column.prop"
         :prop="column.prop"
@@ -134,15 +138,15 @@ initSearchForm()
         <template v-if="column.slot" #default="scope">
           <slot :name="column.slot" :row="scope.row" :column="scope.column" :value="scope.row[column.prop]" />
         </template>
-      </el-table-column>
-      
+      </ElTableColumn>
+
       <!-- 操作列插槽 -->
       <slot name="actions" />
-    </el-table>
+    </ElTable>
 
     <!-- 分页 -->
     <div v-if="showPagination" class="pagination-container">
-      <el-pagination
+      <ElPagination
         v-model:current-page="page"
         v-model:page-size="size"
         :page-sizes="[10, 20, 50, 100]"
@@ -163,7 +167,7 @@ initSearchForm()
     border-radius: 4px;
     margin-bottom: 20px;
   }
-  
+
   .pagination-container {
     margin-top: 20px;
     display: flex;

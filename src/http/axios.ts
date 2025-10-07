@@ -35,7 +35,7 @@ function createInstance() {
       const responseType = response.config.responseType
       if (responseType === "blob" || responseType === "arraybuffer") return apiData
       // 统一响应结构 { data, code, msg }
-      if (apiData && typeof apiData === 'object' && Object.prototype.hasOwnProperty.call(apiData, 'code')) {
+      if (apiData && typeof apiData === "object" && Object.prototype.hasOwnProperty.call(apiData, "code")) {
         const code = apiData.code
         if (code === 200 || code === 0) {
           // 可选：返回完整响应（包含 msg），供部分接口获取提示信息

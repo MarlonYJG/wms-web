@@ -1,5 +1,5 @@
+import type { ProductSku, ProductSkuForm, ProductSkuQuery } from "./type"
 import { http } from "@/http/axios"
-import type { ProductSku, ProductSkuQuery, ProductSkuForm } from "./type"
 
 /** 获取商品SKU列表 */
 export function getProductSkuList(params: ProductSkuQuery) {

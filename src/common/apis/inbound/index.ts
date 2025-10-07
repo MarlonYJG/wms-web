@@ -1,5 +1,5 @@
+import type { InboundOrder, InboundOrderForm, InboundOrderItem, InboundOrderQuery } from "./type"
 import { http } from "@/http/axios"
-import type { InboundOrder, InboundOrderQuery, InboundOrderForm, InboundOrderItem } from "./type"
 
 /** 获取入库单列表 */
 export function getInboundOrderList(params: InboundOrderQuery) {
@@ -27,7 +27,7 @@ export function deleteInboundOrder(id: number) {
 }
 
 /** 确认收货 */
-export function confirmReceipt(id: number, items: Array<{ productSkuId: number; receivedQuantity: number; batchNo?: string }>) {
+export function confirmReceipt(id: number, items: Array<{ productSkuId: number, receivedQuantity: number, batchNo?: string }>) {
   return http.post(`/inbound-order/${id}/confirm-receipt`, { items })
 }
 

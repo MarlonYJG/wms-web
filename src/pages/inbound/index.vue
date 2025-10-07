@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from "vue"
+import type { InboundOrder, InboundOrderForm, InboundOrderQuery } from "@/common/apis/inbound/type"
 import { ElMessage, ElMessageBox } from "element-plus"
-import { getInboundOrderList, createInboundOrder, updateInboundOrder, deleteInboundOrder, confirmReceipt } from "@/common/apis/inbound"
-import type { InboundOrder, InboundOrderQuery, InboundOrderForm } from "@/common/apis/inbound/type"
-import InboundOrderFormDialog from "./components/InboundOrderFormDialog.vue"
+import { onMounted, reactive, ref } from "vue"
+import { confirmReceipt, createInboundOrder, deleteInboundOrder, getInboundOrderList, updateInboundOrder } from "@/common/apis/inbound"
 import InboundOrderDetailDialog from "./components/InboundOrderDetailDialog.vue"
+import InboundOrderFormDialog from "./components/InboundOrderFormDialog.vue"
 
 // 响应式数据
 const tableData = ref<InboundOrder[]>([])
@@ -26,7 +26,7 @@ const queryParams = reactive<InboundOrderQuery>({
 // 对话框引用
 const formDialog = ref<InstanceType<typeof InboundOrderFormDialog>>()
 const detailDialog = ref<InstanceType<typeof InboundOrderDetailDialog>>()
-const formType = ref<'create' | 'edit'>('create')
+const formType = ref<"create" | "edit">("create")
 const currentRecord = ref<InboundOrder>()
 
 // 状态选项
@@ -38,7 +38,7 @@ const statusOptions = [
 ]
 
 // 获取入库单列表
-const fetchInboundOrderList = async () => {
+async function fetchInboundOrderList() {
   loading.value = true
   try {
     const response = await getInboundOrderList(queryParams)
@@ -52,13 +52,13 @@ const fetchInboundOrderList = async () => {
 }
 
 // 搜索
-const handleSearch = () => {
+function handleSearch() {
   queryParams.page = 1
   fetchInboundOrderList()
 }
 
 // 重置搜索
-const handleReset = () => {
+function handleReset() {
   Object.assign(queryParams, {
     page: 1,
     size: 10,
@@ -73,27 +73,27 @@ const handleReset = () => {
 }
 
 // 新增入库单
-const handleAdd = () => {
-  formType.value = 'create'
+function handleAdd() {
+  formType.value = "create"
   currentRecord.value = undefined
   formDialog.value?.open()
 }
 
 // 编辑入库单
-const handleEdit = (row: InboundOrder) => {
-  formType.value = 'edit'
+function handleEdit(row: InboundOrder) {
+  formType.value = "edit"
   currentRecord.value = row
   formDialog.value?.open()
 }
 
 // 查看详情
-const handleView = (row: InboundOrder) => {
+function handleView(row: InboundOrder) {
   currentRecord.value = row
   detailDialog.value?.open()
 }
 
 // 删除入库单
-const handleDelete = async (row: InboundOrder) => {
+async function handleDelete(row: InboundOrder) {
   try {
     await ElMessageBox.confirm(
       `确定要删除入库单"${row.orderNo}"吗？`,
@@ -104,19 +104,19 @@ const handleDelete = async (row: InboundOrder) => {
         type: "warning"
       }
     )
-    
+
     await deleteInboundOrder(row.id)
     ElMessage.success("删除成功")
     fetchInboundOrderList()
   } catch (error) {
-    if (error !== 'cancel') {
+    if (error !== "cancel") {
       ElMessage.error("删除失败")
     }
   }
 }
 
 // 确认收货
-const handleConfirmReceipt = async (row: InboundOrder) => {
+async function handleConfirmReceipt(row: InboundOrder) {
   try {
     await ElMessageBox.confirm(
       `确定要确认收货入库单"${row.orderNo}"吗？`,
@@ -127,45 +127,45 @@ const handleConfirmReceipt = async (row: InboundOrder) => {
         type: "warning"
       }
     )
-    
+
     // 这里应该打开收货确认对话框，暂时简化处理
     await confirmReceipt(row.id, row.items.map(item => ({
       productSkuId: item.productSkuId,
       receivedQuantity: item.expectedQuantity
     })))
-    
+
     ElMessage.success("确认收货成功")
     fetchInboundOrderList()
   } catch (error) {
-    if (error !== 'cancel') {
+    if (error !== "cancel") {
       ElMessage.error("确认收货失败")
     }
   }
 }
 
 // 保存入库单
-const handleSave = async (formData: InboundOrderForm) => {
+async function handleSave(formData: InboundOrderForm) {
   try {
-    if (formType.value === 'create') {
+    if (formType.value === "create") {
       await createInboundOrder(formData)
       ElMessage.success("创建成功")
     } else {
       await updateInboundOrder(currentRecord.value!.id, formData)
       ElMessage.success("更新成功")
     }
-    
+
     formDialog.value?.close()
     fetchInboundOrderList()
   } catch (error) {
-    ElMessage.error(formType.value === 'create' ? "创建失败" : "更新失败")
+    ElMessage.error(formType.value === "create" ? "创建失败" : "更新失败")
   }
 }
 
 // 获取状态标签类型
-const getStatusTagType = (status: number) => {
+function getStatusTagType(status: number) {
   const typeMap = {
     1: "warning",
-    2: "primary", 
+    2: "primary",
     3: "success",
     4: "danger"
   }
@@ -173,18 +173,18 @@ const getStatusTagType = (status: number) => {
 }
 
 // 获取状态文本
-const getStatusText = (status: number) => {
+function getStatusText(status: number) {
   const option = statusOptions.find(opt => opt.value === status)
   return option?.label || "未知"
 }
 
 // 分页变化
-const handlePageChange = (page: number) => {
+function handlePageChange(page: number) {
   queryParams.page = page
   fetchInboundOrderList()
 }
 
-const handleSizeChange = (size: number) => {
+function handleSizeChange(size: number) {
   queryParams.size = size
   queryParams.page = 1
   fetchInboundOrderList()
@@ -237,8 +237,12 @@ onMounted(() => {
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleSearch">搜索</el-button>
-          <el-button @click="handleReset">重置</el-button>
+          <el-button type="primary" @click="handleSearch">
+            搜索
+          </el-button>
+          <el-button @click="handleReset">
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -248,7 +252,9 @@ onMounted(() => {
       <template #header>
         <div class="card-header">
           <span>入库单列表</span>
-          <el-button type="primary" @click="handleAdd">新增入库单</el-button>
+          <el-button type="primary" @click="handleAdd">
+            新增入库单
+          </el-button>
         </div>
       </template>
 
@@ -280,26 +286,26 @@ onMounted(() => {
             <el-button type="info" size="small" @click="handleView(row)">
               详情
             </el-button>
-            <el-button 
-              v-if="row.status === 1" 
-              type="primary" 
-              size="small" 
+            <el-button
+              v-if="row.status === 1"
+              type="primary"
+              size="small"
               @click="handleEdit(row)"
             >
               编辑
             </el-button>
-            <el-button 
-              v-if="row.status === 1" 
-              type="success" 
-              size="small" 
+            <el-button
+              v-if="row.status === 1"
+              type="success"
+              size="small"
               @click="handleConfirmReceipt(row)"
             >
               确认收货
             </el-button>
-            <el-button 
-              v-if="row.status === 1" 
-              type="danger" 
-              size="small" 
+            <el-button
+              v-if="row.status === 1"
+              type="danger"
+              size="small"
               @click="handleDelete(row)"
             >
               删除
@@ -341,18 +347,18 @@ onMounted(() => {
 <style lang="scss" scoped>
 .inbound-container {
   padding: 20px;
-  
+
   .search-card {
     margin-bottom: 20px;
   }
-  
+
   .table-card {
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    
+
     .pagination-container {
       margin-top: 20px;
       display: flex;
