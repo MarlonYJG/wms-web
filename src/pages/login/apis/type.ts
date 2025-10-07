@@ -1,12 +1,19 @@
+/*
+ * @Author: Marlon
+ * @Date: 2025-10-06 13:22:51
+ * @Description: 
+ */
 export interface LoginRequestData {
-  /** admin 或 editor */
-  username: "admin" | "editor"
-  /** 密码 */
+  username: string
   password: string
-  /** 验证码 */
+  /** 数字验证码内容 */
   code: string
+  /** 数字验证码 token（init 返回） */
+  token: string
 }
 
-export type CaptchaResponseData = ApiResponseData<string>
+export interface NumericCaptchaInitData {
+  token: string
+  imageBase64: string
+}
 
-export type LoginResponseData = ApiResponseData<{ token: string }>

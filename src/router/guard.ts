@@ -29,19 +29,28 @@ export function registerNavigationGuard(router: Router) {
     }
     // 如果已经登录，并准备进入 Login 页面，则重定向到主页
     if (to.path === LOGIN_PATH) return "/"
-    // 如果用户已经获得其权限角色
-    if (userStore.roles.length !== 0) return true
-    // 否则要重新获取权限角色
+    // 如果已经有角色，但还未注入路由，则注入一次
+    if (userStore.roles.length !== 0) {
+      if (!permissionStore.isRoutesAdded) {
+        routerConfig.dynamic ? permissionStore.setRoutes(userStore.roles) : permissionStore.setAllRoutes()
+        permissionStore.addRoutes.forEach(route => router.addRoute(route))
+        permissionStore.isRoutesAdded = true
+        return { ...to, replace: true }
+      }
+      return true
+    }
+    // 否则要重新获取权限角色并注入路由
     try {
       await userStore.getInfo()
       // 注意：角色必须是一个数组！ 例如: ["admin"] 或 ["developer", "editor"]
       const roles = userStore.roles
-      // 生成可访问的 Routes
-      routerConfig.dynamic ? permissionStore.setRoutes(roles) : permissionStore.setAllRoutes()
-      // 将 "有访问权限的动态路由" 添加到 Router 中
-      permissionStore.addRoutes.forEach(route => router.addRoute(route))
-      // 设置 replace: true, 因此导航将不会留下历史记录
-      return { ...to, replace: true }
+      if (!permissionStore.isRoutesAdded) {
+        routerConfig.dynamic ? permissionStore.setRoutes(roles) : permissionStore.setAllRoutes()
+        permissionStore.addRoutes.forEach(route => router.addRoute(route))
+        permissionStore.isRoutesAdded = true
+        return { ...to, replace: true }
+      }
+      return true
     } catch (error) {
       // 过程中发生任何错误，都直接重置 Token，并重定向到登录页面
       userStore.resetToken()
