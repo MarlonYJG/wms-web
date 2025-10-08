@@ -1,22 +1,26 @@
 <script lang="ts" setup>
 import type { Warehouse, WarehouseForm, WarehouseQuery } from "@/common/apis/warehouse/type"
-import { ElMessage, ElMessageBox } from "element-plus"
+import { ElMessageBox } from "element-plus"
 import { onMounted, reactive, ref } from "vue"
 import { createWarehouse, deleteWarehouse, getWarehouseList, updateWarehouse, updateWarehouseStatus } from "@/common/apis/warehouse"
+import { formatDateTime } from "@/common/utils/datetime"
 import WarehouseFormDialog from "./components/WarehouseFormDialog.vue"
 
 // 响应式数据
 const tableData = ref<Warehouse[]>([])
 const loading = ref(false)
 const total = ref(0)
+const currentPage = ref(1) // 前端显示的页码（从1开始）
 
 // 查询参数
 const queryParams = reactive<WarehouseQuery>({
-  page: 1,
+  page: 0, // 后端使用0开始的页码
   size: 10,
+  sortBy: "createdTime",
+  sortDir: "desc",
   name: "",
   code: "",
-  isEnabled: undefined
+  isEnabled: null
 })
 
 // 表单对话框
@@ -27,32 +31,32 @@ const currentRecord = ref<Warehouse>()
 // 获取仓库列表
 async function fetchWarehouseList() {
   loading.value = true
-  try {
-    const response = await getWarehouseList(queryParams)
-    tableData.value = response.data
-    total.value = response.total || 0
-  } catch {
-    ElMessage.error("获取仓库列表失败")
-  } finally {
-    loading.value = false
-  }
+  const data = await getWarehouseList(queryParams)
+  tableData.value = data.content
+  total.value = data.total
+  currentPage.value = data.pageNumber + 1 // 后端页码从0开始，前端从1开始
+  loading.value = false
 }
 
 // 搜索
 function handleSearch() {
-  queryParams.page = 1
+  queryParams.page = 0 // 重置为第一页
+  currentPage.value = 1
   fetchWarehouseList()
 }
 
 // 重置搜索
 function handleReset() {
   Object.assign(queryParams, {
-    page: 1,
+    page: 0,
     size: 10,
+    sortBy: "createdTime",
+    sortDir: "desc",
     name: "",
     code: "",
-    isEnabled: undefined
+    isEnabled: null
   })
+  currentPage.value = 1
   fetchWarehouseList()
 }
 
@@ -66,71 +70,64 @@ function handleAdd() {
 // 编辑仓库
 function handleEdit(row: Warehouse) {
   formType.value = "edit"
-  currentRecord.value = row
+  currentRecord.value = { ...row } // 创建副本避免引用问题
   formDialog.value?.open()
 }
 
 // 启用/禁用切换
 async function handleToggleEnabled(row: Warehouse) {
-  try {
-    await updateWarehouseStatus(row.id, !row.isEnabled)
-    ElMessage.success(!row.isEnabled ? "已启用" : "已禁用")
-    fetchWarehouseList()
-  } catch {
-    ElMessage.error("状态更新失败")
-  }
+  console.log(row.isEnabled)
+  await updateWarehouseStatus(row.id, row.isEnabled)
+  fetchWarehouseList()
 }
 
 // 删除仓库
 async function handleDelete(row: Warehouse) {
-  try {
-    await ElMessageBox.confirm(
-      `确定要删除仓库"${row.name}"吗？`,
-      "确认删除",
-      {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }
-    )
-
-    await deleteWarehouse(row.id)
-    ElMessage.success("删除成功")
-    fetchWarehouseList()
-  } catch (error) {
-    if (error !== "cancel") {
-      ElMessage.error("删除失败")
+  await ElMessageBox.confirm(
+    `确定要删除仓库"${row.name}"吗？`,
+    "确认删除",
+    {
+      closeOnClickModal: false,
+      closeOnPressEscape: false,
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning"
     }
-  }
+  ).then(async () => {
+    await deleteWarehouse(row.id)
+    fetchWarehouseList()
+  }).catch(() => {
+    console.log("取消删除")
+  })
 }
 
 // 保存仓库
 async function handleSave(formData: WarehouseForm) {
-  try {
-    if (formType.value === "create") {
-      await createWarehouse(formData)
-      ElMessage.success("创建成功")
-    } else {
-      await updateWarehouse(currentRecord.value!.id, formData)
-      ElMessage.success("更新成功")
-    }
-
-    formDialog.value?.close()
-    fetchWarehouseList()
-  } catch {
-    ElMessage.error(formType.value === "create" ? "创建失败" : "更新失败")
+  if (formType.value === "create") {
+    await createWarehouse(formData)
+  } else {
+    await updateWarehouse(currentRecord.value!.id, formData)
   }
+
+  formDialog.value?.close()
+  fetchWarehouseList()
+}
+
+// 序号
+function indexMethod(index: number) {
+  return (queryParams.page || 0) * (queryParams.size || 10) + index + 1
 }
 
 // 分页变化
 function handlePageChange(page: number) {
-  queryParams.page = page
+  queryParams.page = page - 1 // 前端页码从1开始，后端从0开始
   fetchWarehouseList()
 }
-
+// 分页大小变化
 function handleSizeChange(size: number) {
   queryParams.size = size
-  queryParams.page = 1
+  queryParams.page = 0 // 重置为第一页
+  currentPage.value = 1
   fetchWarehouseList()
 }
 
@@ -185,30 +182,26 @@ onMounted(() => {
         :data="tableData" v-loading="loading" stripe border
         :header-cell-style="{ background: 'var(--el-fill-color-light)' }" row-key="id"
       >
-        <el-table-column prop="id" label="ID" width="80" />
+        <el-table-column type="index" label="序号" width="80" :index="indexMethod" align="center" />
         <el-table-column prop="name" label="仓库名称" show-overflow-tooltip />
         <el-table-column prop="code" label="仓库编码" show-overflow-tooltip />
         <el-table-column prop="address" label="地址" show-overflow-tooltip />
-        <el-table-column prop="isEnabled" label="状态" width="100">
-          <template #default="{ row }">
-            <el-tag :type="row.isEnabled ? 'success' : 'danger'">
-              {{ row.isEnabled ? '启用' : '禁用' }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="createdTime" label="创建时间" width="180">
-          <template #default="{ row }">
-            {{ new Date(row.createdTime).toLocaleString() }}
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="260" fixed="right">
+        <el-table-column prop="isEnabled" label="状态" width="150" align="center">
           <template #default="{ row }">
             <el-switch
-              v-model="row.isEnabled"
-              :active-text="row.isEnabled ? '启用' : '禁用'"
+              v-model="row.isEnabled" :active-text="row.isEnabled ? '启用' : '禁用'"
               @change="() => handleToggleEnabled(row)"
             />
-            <el-button type="primary" size="small" @click="handleEdit(row)">
+          </template>
+        </el-table-column>
+        <el-table-column prop="createdTime" label="创建时间" width="180" align="center">
+          <template #default="{ row }">
+            {{ formatDateTime(row.createdTime) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="180" fixed="right" align="center">
+          <template #default="{ row }">
+            <el-button class="ml-4" type="primary" size="small" @click="handleEdit(row)">
               编辑
             </el-button>
             <el-button type="danger" size="small" @click="handleDelete(row)">
@@ -227,7 +220,7 @@ onMounted(() => {
       <!-- 分页 -->
       <div class="pagination-container">
         <el-pagination
-          v-model:current-page="queryParams.page" v-model:page-size="queryParams.size"
+          v-model:current-page="currentPage" v-model:page-size="queryParams.size"
           :page-sizes="[10, 20, 50, 100]" :total="total" background layout="total, sizes, prev, pager, next, jumper"
           @size-change="handleSizeChange" @current-change="handlePageChange"
         />
@@ -280,7 +273,6 @@ onMounted(() => {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 0;
 
       .card-title {
         font-weight: 600;

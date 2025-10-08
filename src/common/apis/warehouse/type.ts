@@ -1,3 +1,8 @@
+/*
+ * @Author: Marlon
+ * @Date: 2025-10-06 13:44:48
+ * @Description: 
+ */
 /** 仓库信息 */
 export interface Warehouse {
   id: number
@@ -9,17 +14,24 @@ export interface Warehouse {
   totalCapacity?: number
   usedCapacity?: number
   isEnabled: boolean
-  createdTime: string
+  createdTime: number // 时间戳（毫秒）
+  updatedTime: number // 时间戳（毫秒）
+  createdBy?: string
+  updatedBy?: string
 }
 
 /** 仓库查询参数 */
 export interface WarehouseQuery {
   page?: number
   size?: number
+  sortBy?: string
+  sortDir?: 'asc' | 'desc'
   keyword?: string
   name?: string
   code?: string
-  isEnabled?: boolean
+  isEnabled?: boolean | null
+  startTime?: number // 时间戳（毫秒）
+  endTime?: number // 时间戳（毫秒）
 }
 
 /** 仓库表单数据 */
@@ -43,7 +55,26 @@ export interface WarehouseStats {
   outboundOrders: number
 }
 
+/** 分页响应数据 */
 export interface PageResult<T> {
-  data: T[]
+  content: T[]
+  pageNumber: number
+  pageSize: number
+  sorted: boolean
+  unsorted: boolean
   total: number
+}
+
+/** API统一响应格式 */
+export interface ApiResponse<T = any> {
+  code: number
+  msg: string
+  data: T
+  error?: {
+    type: string
+    details: Array<{
+      field: string
+      message: string
+    }>
+  }
 }

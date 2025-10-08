@@ -37,7 +37,7 @@ function createInstance() {
       // 统一响应结构 { data, code, msg }
       if (apiData && typeof apiData === "object" && Object.prototype.hasOwnProperty.call(apiData, "code")) {
         const code = apiData.code
-        if (code === 200 || code === 0) {
+        if (code === 200 || code === 201 || code === 204 || code === 0) {
           // 可选：返回完整响应（包含 msg），供部分接口获取提示信息
           if ((response.config as WmsAxiosRequestConfig)?.returnFull) {
             return apiData
@@ -47,7 +47,7 @@ function createInstance() {
         if (code === 401) {
           return logout()
         }
-        ElMessage.error(apiData.msg || apiData.message || "Error")
+        // 不在这里显示错误提示，让业务层处理
         return Promise.reject(new Error(apiData.msg || apiData.message || "Error"))
       }
       // 非标准结构则原样返回（如第三方接口）
@@ -95,7 +95,7 @@ function createInstance() {
           error.message = "HTTP 版本不受支持"
           break
       }
-      ElMessage.error(error.message || backendMsg || "请求失败")
+      // 不在这里显示错误提示，让业务层处理
       return Promise.reject(error)
     }
   )

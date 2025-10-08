@@ -52,19 +52,22 @@ const rules: FormRules = {
 // 监听记录变化，填充表单数据
 watch(() => props.record, (newRecord) => {
   if (newRecord) {
-    Object.assign(formData, {
-      name: newRecord.name,
-      code: newRecord.code,
-      address: newRecord.address || "",
-      contactPerson: newRecord.contactPerson || "",
-      contactPhone: newRecord.contactPhone || "",
-      totalCapacity: newRecord.totalCapacity,
-      isEnabled: newRecord.isEnabled
+    // 使用 nextTick 确保在下一个 DOM 更新周期后执行
+    nextTick(() => {
+      Object.assign(formData, {
+        name: newRecord.name,
+        code: newRecord.code,
+        address: newRecord.address || "",
+        contactPerson: newRecord.contactPerson || "",
+        contactPhone: newRecord.contactPhone || "",
+        totalCapacity: newRecord.totalCapacity,
+        isEnabled: newRecord.isEnabled
+      })
     })
   } else {
     resetForm()
   }
-}, { immediate: true })
+}, { immediate: true, deep: true })
 
 // 重置表单
 function resetForm() {
@@ -85,6 +88,21 @@ function resetForm() {
 // 打开对话框
 function open() {
   visible.value = true
+  // 确保在对话框打开时正确填充数据
+  if (props.record) {
+    nextTick(() => {
+      const record = props.record!
+      Object.assign(formData, {
+        name: record.name,
+        code: record.code,
+        address: record.address || "",
+        contactPerson: record.contactPerson || "",
+        contactPhone: record.contactPhone || "",
+        totalCapacity: record.totalCapacity,
+        isEnabled: record.isEnabled
+      })
+    })
+  }
 }
 
 // 关闭对话框
@@ -122,11 +140,8 @@ defineExpose({
     v-model="visible" :title="type === 'create' ? '新增仓库' : '编辑仓库'" width="640px" :padding="0" top="10vh"
     destroy-on-close :close-on-click-modal="false" @close="handleCancel"
   >
-    <div class="dialog-body">
-      <ElForm
-        ref="formRef" :model="formData" :rules="rules" label-width="80px" class="dialog-form"
-        label-position="right"
-      >
+    <div>
+      <ElForm ref="formRef" :model="formData" :rules="rules" label-width="80px" label-position="right">
         <ElFormItem label="仓库名称" prop="name">
           <ElInput v-model="formData.name" placeholder="请输入仓库名称" maxlength="100" show-word-limit />
         </ElFormItem>
@@ -147,7 +162,7 @@ defineExpose({
           <ElSwitch v-model="formData.isEnabled" active-text="启用" inactive-text="禁用" />
         </ElFormItem>
 
-        <ElFormItem label="地址" class="span-2">
+        <ElFormItem label="地址">
           <ElInput
             v-model="formData.address" type="textarea" placeholder="请输入仓库地址" :rows="3" maxlength="255"
             show-word-limit
@@ -155,13 +170,20 @@ defineExpose({
         </ElFormItem>
 
         <ElFormItem label="总容量" prop="totalCapacity">
-          <ElInputNumber v-model="formData.totalCapacity" :min="0" :step="1" :precision="0" controls-position="right" placeholder="请输入总容量" />
+          <ElInputNumber
+            v-model="formData.totalCapacity" :min="0" :step="1" :precision="2" :controls="false"
+            placeholder="请输入总容量"
+          >
+            <template #suffix>
+              <span>平方米</span>
+            </template>
+          </ElInputNumber>
         </ElFormItem>
       </ElForm>
     </div>
 
     <template #footer>
-      <div class="dialog-footer">
+      <div>
         <ElButton @click="handleCancel">
           取消
         </ElButton>
@@ -173,6 +195,4 @@ defineExpose({
   </ElDialog>
 </template>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
