@@ -159,7 +159,7 @@ defineExpose({
         </ElFormItem>
 
         <ElFormItem label="状态">
-          <ElSwitch v-model="formData.isEnabled" active-text="启用" inactive-text="禁用" />
+          <ElSwitch v-model="formData.isEnabled" />
         </ElFormItem>
 
         <ElFormItem label="地址">
@@ -175,7 +175,7 @@ defineExpose({
             placeholder="请输入总容量"
           >
             <template #suffix>
-              <span>平方米</span>
+              ㎡
             </template>
           </ElInputNumber>
         </ElFormItem>
