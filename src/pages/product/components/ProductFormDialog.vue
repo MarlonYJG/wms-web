@@ -24,10 +24,18 @@ const formData = reactive<ProductSkuForm>({
   skuCode: "",
   name: "",
   specification: "",
+  brand: "",
+  categoryId: undefined,
   supplierId: undefined,
+  barcode: "",
+  barcodes: [],
+  weight: undefined,
+  volume: undefined,
+  safetyStock: undefined,
   isBatchManaged: false,
   isExpiryManaged: false,
-  shelfLifeDays: undefined
+  shelfLifeDays: undefined,
+  isEnabled: true
 })
 
 // 表单验证规则
@@ -49,10 +57,18 @@ watch(() => props.record, (newRecord) => {
       skuCode: newRecord.skuCode,
       name: newRecord.name,
       specification: newRecord.specification || "",
+      brand: newRecord.brand || "",
+      categoryId: newRecord.categoryId,
       supplierId: newRecord.supplierId,
+      barcode: newRecord.barcode || "",
+      barcodes: newRecord.barcodes || [],
+      weight: newRecord.weight,
+      volume: newRecord.volume,
+      safetyStock: newRecord.safetyStock,
       isBatchManaged: newRecord.isBatchManaged,
       isExpiryManaged: newRecord.isExpiryManaged,
-      shelfLifeDays: newRecord.shelfLifeDays
+      shelfLifeDays: newRecord.shelfLifeDays,
+      isEnabled: newRecord.isEnabled ?? true
     })
   } else {
     resetForm()
@@ -65,10 +81,18 @@ function resetForm() {
     skuCode: "",
     name: "",
     specification: "",
+    brand: "",
+    categoryId: undefined,
     supplierId: undefined,
+    barcode: "",
+    barcodes: [],
+    weight: undefined,
+    volume: undefined,
+    safetyStock: undefined,
     isBatchManaged: false,
     isExpiryManaged: false,
-    shelfLifeDays: undefined
+    shelfLifeDays: undefined,
+    isEnabled: true
   })
   nextTick(() => {
     formRef.value?.clearValidate()
@@ -92,7 +116,9 @@ async function handleConfirm() {
 
   try {
     await formRef.value.validate()
-    emit("save", { ...formData })
+    // 简化条码输入：将单条码与多条码合并（去重）
+    const barcodes = Array.from(new Set([...(formData.barcodes || []), ...(formData.barcode ? [formData.barcode] : [])]))
+    emit("save", { ...formData, barcodes })
   } catch (error) {
     console.error("表单验证失败:", error)
   }
@@ -114,7 +140,7 @@ defineExpose({
   <ElDialog
     v-model="visible"
     :title="type === 'create' ? '新增商品' : '编辑商品'"
-    width="600px"
+    width="680px"
     @close="handleCancel"
   >
     <ElForm
@@ -141,6 +167,14 @@ defineExpose({
         />
       </ElFormItem>
 
+      <ElFormItem label="品牌">
+        <ElInput v-model="formData.brand" placeholder="请输入品牌" />
+      </ElFormItem>
+
+      <ElFormItem label="分类">
+        <ElInput v-model="formData.categoryId" placeholder="分类(占位，可替换为级联)" />
+      </ElFormItem>
+
       <ElFormItem label="规格">
         <ElInput
           v-model="formData.specification"
@@ -159,29 +193,40 @@ defineExpose({
         />
       </ElFormItem>
 
+      <ElFormItem label="条码">
+        <ElInput v-model="formData.barcode" placeholder="单条码（可选）" />
+      </ElFormItem>
+
+      <ElFormItem label="多条码">
+        <ElInput v-model="(formData.barcodes as any)" placeholder="多个条码用逗号分隔（占位）" />
+      </ElFormItem>
+
+      <ElFormItem label="重量(kg)">
+        <ElInputNumber v-model="formData.weight" :min="0" :precision="3" :step="0.1" controls-position="right" />
+      </ElFormItem>
+
+      <ElFormItem label="体积(m³)">
+        <ElInputNumber v-model="formData.volume" :min="0" :precision="3" :step="0.1" controls-position="right" />
+      </ElFormItem>
+
+      <ElFormItem label="安全库存">
+        <ElInputNumber v-model="formData.safetyStock" :min="0" :step="1" controls-position="right" />
+      </ElFormItem>
+
       <ElFormItem label="批次管理">
-        <ElSwitch
-          v-model="formData.isBatchManaged"
-          active-text="启用"
-          inactive-text="禁用"
-        />
+        <ElSwitch v-model="formData.isBatchManaged" active-text="启用" inactive-text="禁用" />
       </ElFormItem>
 
       <ElFormItem label="保质期管理">
-        <ElSwitch
-          v-model="formData.isExpiryManaged"
-          active-text="启用"
-          inactive-text="禁用"
-        />
+        <ElSwitch v-model="formData.isExpiryManaged" active-text="启用" inactive-text="禁用" />
       </ElFormItem>
 
       <ElFormItem label="保质期(天)" v-if="formData.isExpiryManaged">
-        <ElInputNumber
-          v-model="formData.shelfLifeDays"
-          placeholder="请输入保质期天数"
-          :min="1"
-          controls-position="right"
-        />
+        <ElInputNumber v-model="formData.shelfLifeDays" placeholder="请输入保质期天数" :min="1" controls-position="right" />
+      </ElFormItem>
+
+      <ElFormItem label="启用状态">
+        <ElSwitch v-model="formData.isEnabled" active-text="启用" inactive-text="禁用" />
       </ElFormItem>
     </ElForm>
 

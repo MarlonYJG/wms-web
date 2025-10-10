@@ -4,11 +4,19 @@ export interface ProductSku {
   skuCode: string
   name: string
   specification?: string
+  brand?: string
+  categoryId?: number
   supplierId?: number
   supplierName?: string
+  barcode?: string
+  barcodes?: string[]
+  weight?: number
+  volume?: number
+  safetyStock?: number
   isBatchManaged: boolean
   isExpiryManaged: boolean
   shelfLifeDays?: number
+  isEnabled?: boolean
   createdTime: string
 }
 
@@ -18,9 +26,12 @@ export interface ProductSkuQuery {
   size?: number
   skuCode?: string
   name?: string
+  brand?: string
+  categoryId?: number
   supplierId?: number
   isBatchManaged?: boolean
   isExpiryManaged?: boolean
+  keyword?: string
 }
 
 /** 商品SKU表单数据 */
@@ -28,10 +39,18 @@ export interface ProductSkuForm {
   skuCode: string
   name: string
   specification?: string
+  brand?: string
+  categoryId?: number
   supplierId?: number
+  barcode?: string
+  barcodes?: string[]
+  weight?: number
+  volume?: number
+  safetyStock?: number
   isBatchManaged?: boolean
   isExpiryManaged?: boolean
   shelfLifeDays?: number
+  isEnabled?: boolean
 }
 
 /** 商品库存信息 */
