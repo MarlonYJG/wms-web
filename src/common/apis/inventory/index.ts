@@ -1,9 +1,9 @@
 import type { Inventory, InventoryQuery, InventoryTransaction, InventoryTransactionQuery } from "./type"
 import { http } from "@/http/axios"
 
-/** 获取库存列表 */
+/** 获取库存列表（分页） */
 export function getInventoryList(params: InventoryQuery) {
-  return http.get<Inventory[]>("/inventory", { params })
+  return http.get<PageResult<Inventory>>("/inventory", { params })
 }
 
 /** 获取库存详情 */

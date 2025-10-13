@@ -59,7 +59,7 @@ function getTrendColor() {
 
       <div class="card-body">
         <ElStatistic
-          :value="value"
+          :value="Number(value)"
           :suffix="suffix"
           :prefix="prefix"
           :precision="precision"

@@ -32,7 +32,9 @@ function getStatusTagType(status: number) {
     3: "success",
     4: "danger"
   }
-  return typeMap[status as keyof typeof typeMap] || "info"
+  const allowedTypes = ["primary", "success", "warning", "info", "danger"] as const
+  const t = (typeMap as any)[status] || "info"
+  return (allowedTypes as readonly string[]).includes(t) ? t : "info"
 }
 
 // 获取状态文本

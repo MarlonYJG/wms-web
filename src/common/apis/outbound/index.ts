@@ -1,9 +1,9 @@
 import type { OutboundOrder, OutboundOrderForm, OutboundOrderItem, OutboundOrderQuery, PickingTask } from "./type"
 import { http } from "@/http/axios"
 
-/** 获取出库单列表 */
+/** 获取出库单列表（分页） */
 export function getOutboundOrderList(params: OutboundOrderQuery) {
-  return http.get<OutboundOrder[]>("/outbound-order", { params })
+  return http.get<PageResult<OutboundOrder>>("/outbound-order", { params })
 }
 
 /** 获取出库单详情 */

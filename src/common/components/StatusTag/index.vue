@@ -38,7 +38,11 @@ const statusConfig = {
 // 获取状态配置
 function getStatusConfig() {
   const config = statusConfig[props.type]
-  return config[props.status as keyof typeof config] || { type: "info", text: "未知" }
+  // Element Plus <el-tag> 的 type 允许的联合类型
+  const allowedTypes = ["primary", "success", "warning", "info", "danger"] as const
+  const result = (config as any)[props.status] || { type: "info", text: "未知" }
+  const safeType = allowedTypes.includes(result.type) ? result.type : "info"
+  return { ...result, type: safeType }
 }
 </script>
 

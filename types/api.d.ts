@@ -4,3 +4,11 @@ interface ApiResponseData<T> {
   data: T
   message: string
 }
+
+/** 通用分页返回结构 */
+interface PageResult<T> {
+  /** 数据列表 */
+  data: T[]
+  /** 总条数 */
+  total: number
+}

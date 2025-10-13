@@ -1,9 +1,9 @@
-import type { InboundOrder, InboundOrderForm, InboundOrderItem, InboundOrderQuery } from "./type"
+import type { InboundOrder, InboundOrderForm, InboundOrderItem, InboundOrderQuery, PutawayTask } from "./type"
 import { http } from "@/http/axios"
 
-/** 获取入库单列表 */
+/** 获取入库单列表（分页） */
 export function getInboundOrderList(params: InboundOrderQuery) {
-  return http.get<InboundOrder[]>("/inbound-order", { params })
+  return http.get<PageResult<InboundOrder>>("/inbound-order", { params })
 }
 
 /** 获取入库单详情 */
@@ -33,7 +33,7 @@ export function confirmReceipt(id: number, items: Array<{ productSkuId: number, 
 
 /** 获取上架任务 */
 export function getPutawayTasks(inboundOrderId: number) {
-  return http.get(`/inbound-order/${id}/putaway-tasks`)
+  return http.get<PutawayTask[]>(`/inbound-order/${inboundOrderId}/putaway-tasks`)
 }
 
 /** 完成上架任务 */
