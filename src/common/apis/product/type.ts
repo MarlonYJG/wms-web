@@ -2,7 +2,7 @@
 export interface ProductSku {
   id: number
   skuCode: string
-  name: string
+  skuName: string
   specification?: string
   brand?: string
   categoryId?: number
@@ -37,7 +37,7 @@ export interface ProductSkuQuery {
 /** 商品SKU表单数据 */
 export interface ProductSkuForm {
   skuCode: string
-  name: string
+  skuName: string
   specification?: string
   brand?: string
   categoryId?: number

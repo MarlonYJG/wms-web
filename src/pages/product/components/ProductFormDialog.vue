@@ -22,7 +22,7 @@ const formRef = ref<InstanceType<typeof ElForm>>()
 // 表单数据
 const formData = reactive<ProductSkuForm>({
   skuCode: "",
-  name: "",
+  skuName: "",
   specification: "",
   brand: "",
   categoryId: undefined,
@@ -44,7 +44,7 @@ const rules = {
     { required: true, message: "请输入SKU编码", trigger: "blur" },
     { min: 2, max: 100, message: "SKU编码长度在 2 到 100 个字符", trigger: "blur" }
   ],
-  name: [
+  skuName: [
     { required: true, message: "请输入商品名称", trigger: "blur" },
     { min: 2, max: 255, message: "商品名称长度在 2 到 255 个字符", trigger: "blur" }
   ]
@@ -55,7 +55,7 @@ watch(() => props.record, (newRecord) => {
   if (newRecord) {
     Object.assign(formData, {
       skuCode: newRecord.skuCode,
-      name: newRecord.name,
+      skuName: newRecord.skuName,
       specification: newRecord.specification || "",
       brand: newRecord.brand || "",
       categoryId: newRecord.categoryId,
@@ -79,7 +79,7 @@ watch(() => props.record, (newRecord) => {
 function resetForm() {
   Object.assign(formData, {
     skuCode: "",
-    name: "",
+    skuName: "",
     specification: "",
     brand: "",
     categoryId: undefined,
@@ -158,9 +158,9 @@ defineExpose({
         />
       </ElFormItem>
 
-      <ElFormItem label="商品名称" prop="name">
+      <ElFormItem label="商品名称" prop="skuName">
         <ElInput
-          v-model="formData.name"
+          v-model="formData.skuName"
           placeholder="请输入商品名称"
           maxlength="255"
           show-word-limit

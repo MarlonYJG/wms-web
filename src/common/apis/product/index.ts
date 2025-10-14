@@ -1,9 +1,10 @@
 import type { ProductSku, ProductSkuForm, ProductSkuQuery } from "./type"
+import type { PageResult } from "@@/apis/supplier/type"
 import { http } from "@/http/axios"
 
 /** 获取商品SKU列表 */
 export function getProductSkuList(params: ProductSkuQuery) {
-  return http.get<ProductSku[]>("/product-sku", { params })
+  return http.get<PageResult<ProductSku>>("/product-sku", { params })
 }
 
 /** 获取商品SKU详情 */

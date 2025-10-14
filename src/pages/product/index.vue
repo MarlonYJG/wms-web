@@ -40,9 +40,9 @@ const currentRecord = ref<ProductSku>()
 async function fetchProductList() {
   loading.value = true
   try {
-    const response = await getProductSkuList(queryParams)
-    tableData.value = response
-    total.value = Array.isArray(response) ? response.length : 0
+    const page = await getProductSkuList(queryParams)
+    tableData.value = page.content
+    total.value = page.total
   } catch {
     ElMessage.error("获取商品列表失败")
   } finally {
@@ -88,7 +88,7 @@ function handleEdit(row: ProductSku) {
 async function handleDelete(row: ProductSku) {
   try {
     await ElMessageBox.confirm(
-      `确定要删除商品"${row.name}"吗？`,
+      `确定要删除商品"${row.skuName}"吗？`,
       "确认删除",
       {
         confirmButtonText: "确定",
@@ -138,7 +138,7 @@ function handleExport() {
   const rows = tableData.value.map(r => [
     r.id,
     r.skuCode,
-    r.name,
+    r.skuName,
     r.specification ?? "",
     r.supplierName ?? "",
     r.isBatchManaged ? "是" : "否",
@@ -160,7 +160,7 @@ function handleExport() {
 const visibleColumns = ref([
   { key: "id", label: "ID", show: true },
   { key: "skuCode", label: "SKU编码", show: true },
-  { key: "name", label: "商品名称", show: true },
+  { key: "skuName", label: "商品名称", show: true },
   { key: "specification", label: "规格", show: true },
   { key: "supplierName", label: "供应商", show: true },
   { key: "isBatchManaged", label: "批次管理", show: true },
@@ -176,7 +176,7 @@ function openColumnSettings() {
 function downloadTemplate() {
   const headers = [
     "skuCode",
-    "name",
+    "skuName",
     "specification",
     "supplierName",
     "isBatchManaged",
