@@ -26,6 +26,37 @@ export const constantRoutes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: "/sales",
+    component: Layouts,
+    redirect: "/sales/quotes",
+    name: "Sales",
+    meta: {
+      title: "销售管理",
+      elIcon: "Sell",
+      roles: [PERMISSIONS.QUOTE_LIST]
+    },
+    children: [
+      {
+        path: "index",
+        component: () => import("@/pages/sales/index.vue"),
+        name: "SalesIndex",
+        meta: {
+          title: "销售管理",
+          roles: [PERMISSIONS.QUOTE_LIST]
+        }
+      },
+      {
+        path: "quotes",
+        component: () => import("@/pages/sales/quotes.vue"),
+        name: "SalesQuotes",
+        meta: {
+          title: "报价单",
+          roles: [PERMISSIONS.QUOTE_LIST]
+        }
+      }
+    ]
+  },
+  {
     path: "/403",
     component: () => import("@/pages/error/403.vue"),
     meta: {
@@ -305,10 +336,59 @@ export const constantRoutes: RouteRecordRaw[] = [
           title: "发货管理",
           roles: [PERMISSIONS.OUTBOUND_SHIPPING_LIST]
         }
+      },
+      {
+        path: "charges",
+        component: () => import("@/pages/outbound/charges.vue"),
+        name: "OutboundCharges",
+        meta: {
+          title: "费用管理",
+          roles: [PERMISSIONS.FINANCE_CHARGE_LIST]
+        }
       }
     ]
   }
   ,
+  {
+    path: "/finance",
+    component: Layouts,
+    redirect: "/finance/settlements",
+    name: "Finance",
+    meta: {
+      title: "财务结算",
+      elIcon: "Wallet",
+      roles: [PERMISSIONS.FINANCE_SETTLEMENT_LIST]
+    },
+    children: [
+      {
+        path: "settlements",
+        component: () => import("@/pages/finance/settlements.vue"),
+        name: "FinanceSettlements",
+        meta: {
+          title: "结算单",
+          roles: [PERMISSIONS.FINANCE_SETTLEMENT_LIST]
+        }
+      },
+      {
+        path: "charges",
+        component: () => import("@/pages/finance/charges.vue"),
+        name: "FinanceCharges",
+        meta: {
+          title: "出库费用",
+          roles: [PERMISSIONS.FINANCE_CHARGE_LIST]
+        }
+      },
+      {
+        path: "charge-dict",
+        component: () => import("@/pages/finance/charge-dict.vue"),
+        name: "FinanceChargeDict",
+        meta: {
+          title: "费用项字典",
+          roles: [PERMISSIONS.FINANCE_CHARGE_DICT_LIST]
+        }
+      }
+    ]
+  },
   {
     path: "/reports",
     component: Layouts,

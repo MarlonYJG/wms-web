@@ -136,6 +136,35 @@ export const PERMISSIONS = {
   REPORT_EXPORT_STATUS: "report:export:status",
   REPORT_EXPORT_DOWNLOAD: "report:export:download",
 
+  // 财务结算
+  FINANCE_CHARGE_LIST: "finance:charge:list",
+  FINANCE_CHARGE_ADD: "finance:charge:add",
+  FINANCE_CHARGE_EDIT: "finance:charge:edit",
+  FINANCE_CHARGE_DELETE: "finance:charge:delete",
+
+  FINANCE_CHARGE_DICT_LIST: "finance:chargeDict:list",
+  FINANCE_CHARGE_DICT_ADD: "finance:chargeDict:add",
+  FINANCE_CHARGE_DICT_EDIT: "finance:chargeDict:edit",
+  FINANCE_CHARGE_DICT_DELETE: "finance:chargeDict:delete",
+
+  FINANCE_SETTLEMENT_LIST: "finance:settlement:list",
+  FINANCE_SETTLEMENT_ADD: "finance:settlement:add",
+  FINANCE_SETTLEMENT_SUBMIT: "finance:settlement:submit",
+  FINANCE_SETTLEMENT_APPROVE: "finance:settlement:approve",
+  FINANCE_SETTLEMENT_CLOSE: "finance:settlement:close",
+  FINANCE_SETTLEMENT_VOID: "finance:settlement:void",
+
+  // 报价单
+  QUOTE_LIST: "quote:list",
+  QUOTE_ADD: "quote:add",
+  QUOTE_EDIT: "quote:edit",
+  QUOTE_DELETE: "quote:delete",
+  QUOTE_SUBMIT: "quote:submit",
+  QUOTE_APPROVE: "quote:approve",
+  QUOTE_INVALIDATE: "quote:invalidate",
+  QUOTE_VOID: "quote:void",
+  QUOTE_EXPORT: "quote:export",
+
   // 系统管理（建议）
   SYSTEM_USER_LIST: "system:user:list",
   SYSTEM_USER_ADD: "system:user:add",
